@@ -47,7 +47,7 @@ init_d=zeros(azimuthal_discretization_number,1);
 fin_d=zeros(azimuthal_discretization_number,1);
 init_d(:,1)=0.05;
 
-length_of_ray_in_a_mesh_to_particular_direction=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,100);
+length_of_ray_in_a_mesh_to_particular_direction=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,200);
 
 ray_index_count_for_each_mesh_for_each_direction_1=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number);
 
@@ -142,6 +142,7 @@ for az_count=1:N_a/4
                 length_of_ray_in_a_mesh_to_particular_direction(ray_tracking_index_y,ray_tracking_index_x,az_count,ray_index_count_for_each_mesh_for_each_direction_1(ray_tracking_index_y,ray_tracking_index_x,az_count))=sqrt((x_new-x_old)^2+(y_new-y_old)^2);
                 ray_tracking_index_y=ray_tracking_index_y+1;
                
+                
                 x_old=x_new;
                 y_old=y_new;
             else

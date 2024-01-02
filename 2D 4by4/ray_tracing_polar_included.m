@@ -47,7 +47,7 @@ weight_azimuthal(end,1)=0.5*(2*pi-altered_azimuthal_direction_theta(end-1,1)+alt
 
 ray_index_count_for_each_mesh_for_each_direction=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,polar_discretization_number);
 s_len=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,polar_discretization_number,100);
-exponential_portion=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,polar_discretization_number,100);
+exponential_portion=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,polar_discretization_number,200);
 sum_s_len=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,polar_discretization_number);
 
 %% bottom to top rays

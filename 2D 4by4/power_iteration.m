@@ -49,7 +49,7 @@ while abs(k_new-k_old)>tol
 end
 mesh_centre_x=(dx/2:dx:X)';
 mesh_centre_y=(dx/2:dx:Y)';
-
+figure(50)
 mesh(mesh_centre_x, mesh_centre_y,flux_new);
 xlabel("X ordinate");
 ylabel("Y ordinate");

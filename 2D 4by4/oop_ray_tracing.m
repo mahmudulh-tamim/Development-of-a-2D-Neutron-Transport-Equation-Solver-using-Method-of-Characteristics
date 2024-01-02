@@ -21,7 +21,7 @@ mesh_center_abscissa_number=length(mesh_center_x);
 mesh_center_ordinate_number=length(mesh_center_y);
 
 %% plotting ray tracing initialization
-figure(3)
+figure(10)
 hold on;
 ax = gca;
 ax.XAxis.MinorTick = 'on';
@@ -32,7 +32,7 @@ ax.YAxis.MinorTick = 'on';
 ax.YAxis.MinorTickValues =0:0.1:4;
 grid on;
 ax.YMinorGrid = 'on';
-title("leftt to right angle less than pi/2 on left")
+title("3rd figure")
 %% angular discretization
 
 %polar discretization
@@ -64,21 +64,21 @@ ray_index_count_for_each_mesh_for_each_direction_1=zeros(mesh_center_ordinate_nu
 
 %left to right angle less than pi/2
 for az_count=1:N_a/4
-    n_x=ceil(abs((X-dx/2)*sin(azimuthal_direction_theta(az_count,1))/init_d(az_count)));
-    n_y=ceil(abs((Y-dy/2)*cos(azimuthal_direction_theta(az_count,1))/init_d(az_count)));
-    altered_azimuthal_direction_theta(az_count,1)=atan(Y*n_x/(X*n_y));
-    fin_d(az_count,1)=sqrt((X^2+Y^2)/(n_x^2+n_y^2));
+    n_x=ceil(abs((X)*sin(azimuthal_direction_theta(az_count,1))/init_d(az_count)));
+    n_y=ceil(abs((Y)*cos(azimuthal_direction_theta(az_count,1))/init_d(az_count)));
+    altered_azimuthal_direction_theta(az_count,1)=pi+atan(Y*n_x/(X*n_y));
+    fin_d(az_count,1)=X/n_x*abs(sin(altered_azimuthal_direction_theta(az_count,1)));
     ray_spacing_x=fin_d(az_count,1)*abs(csc(altered_azimuthal_direction_theta(az_count,1)));
     ray_spacing_y=fin_d(az_count,1)*abs(sec(altered_azimuthal_direction_theta(az_count,1)));
-    ray_pos_x_bound=(dx/4:ray_spacing_x:X-dx/4)';
-    ray_pos_y_bound=(dy/4:ray_spacing_y:Y-dy/4)';
+    ray_pos_x_bound=(ray_spacing_x/2:ray_spacing_x:X)';
+    ray_pos_y_bound=(ray_spacing_y/2:ray_spacing_y:Y)';
 
 
     number_of_ray_pos_x=length(ray_pos_x_bound);
     number_of_ray_pos_y=length(ray_pos_y_bound);
     p_x=1; % x index of ray position
 
-  %{
+
     
     i_x=1; %mesh index x direction
     i_y=1; %mesh index y direction
@@ -123,7 +123,7 @@ for az_count=1:N_a/4
     end
 
 
- %}
+
 
     p_y=1; % y index of ray position
     
@@ -167,21 +167,21 @@ for az_count=1:N_a/4
             end
         end
     end 
-  %}
+
 end
-%{
+
 
 
 %right to left angle greater than pi/2
 for az_count=N_a/4+1:N_a/2
-    n_x=ceil(abs((X-dx/2)*sin(azimuthal_direction_theta(az_count,1))/init_d(az_count)));
-    n_y=ceil(abs((Y-dy/2)*cos(azimuthal_direction_theta(az_count,1))/init_d(az_count)));
+   n_x=ceil(abs((X)*sin(azimuthal_direction_theta(az_count,1))/init_d(az_count)));
+    n_y=ceil(abs((Y)*cos(azimuthal_direction_theta(az_count,1))/init_d(az_count)));
     altered_azimuthal_direction_theta(az_count,1)=pi-atan(Y*n_x/(X*n_y));
-    fin_d(az_count,1)=sqrt((X^2+Y^2)/(n_x^2+n_y^2));
+    fin_d(az_count,1)=X/n_x*abs(sin(altered_azimuthal_direction_theta(az_count,1)));
     ray_spacing_x=fin_d(az_count,1)*abs(csc(altered_azimuthal_direction_theta(az_count,1)));
     ray_spacing_y=fin_d(az_count,1)*abs(sec(altered_azimuthal_direction_theta(az_count,1)));
-    ray_pos_x_bound=(dx/4:ray_spacing_x:X-dx/4)';
-    ray_pos_y_bound=(dy/4:ray_spacing_y:Y-dy/4)';
+    ray_pos_x_bound=(ray_spacing_x/2:ray_spacing_x:X)';
+    ray_pos_y_bound=(ray_spacing_y/2:ray_spacing_y:Y)';
 
 
     number_of_ray_pos_x=length(ray_pos_x_bound);
@@ -231,7 +231,7 @@ for az_count=N_a/4+1:N_a/2
             end
         end
     end
-    
+
     p_y=1; % y index of ray position
     
     i_x=mesh_center_abscissa_number; %mesh index x direction
@@ -275,6 +275,7 @@ for az_count=N_a/4+1:N_a/2
             end
         end
     end
+%}
 end
 
 
@@ -285,11 +286,11 @@ for az_count=3*N_a/4+1:N_a
     n_x=ceil(abs((X-dx/2)*sin(azimuthal_direction_theta(az_count,1))/init_d(az_count)));
     n_y=ceil(abs((Y-dy/2)*cos(azimuthal_direction_theta(az_count,1))/init_d(az_count)));
     altered_azimuthal_direction_theta(az_count,1)=2*pi-atan(Y*n_x/(X*n_y));
-    fin_d(az_count,1)=sqrt((X^2+Y^2)/(n_x^2+n_y^2));
+    fin_d(az_count,1)=X/n_x*abs(sin(altered_azimuthal_direction_theta(az_count,1)));
     ray_spacing_x=fin_d(az_count,1)*abs(csc(altered_azimuthal_direction_theta(az_count,1)));
     ray_spacing_y=fin_d(az_count,1)*abs(sec(altered_azimuthal_direction_theta(az_count,1)));
-    ray_pos_x_bound=(dx/4:ray_spacing_x:X-dx/4)';
-    ray_pos_y_bound=(dy/4:ray_spacing_y:Y-dy/4)';
+    ray_pos_x_bound=(ray_spacing_x/2:ray_spacing_x:X)';
+    ray_pos_y_bound=(ray_spacing_y/2:ray_spacing_y:Y)';
 
 
     number_of_ray_pos_x=length(ray_pos_x_bound);
@@ -387,7 +388,7 @@ for az_count=3*N_a/4+1:N_a
     end
 
 end
-  
+
 
 %right to left angle greater than pi/2
 for az_count=N_a/2+1:3*N_a/4
@@ -397,8 +398,8 @@ for az_count=N_a/2+1:3*N_a/4
     fin_d(az_count,1)=X/n_x*abs(sin(altered_azimuthal_direction_theta(az_count,1)));
     ray_spacing_x=fin_d(az_count,1)*abs(csc(altered_azimuthal_direction_theta(az_count,1)));
     ray_spacing_y=fin_d(az_count,1)*abs(sec(altered_azimuthal_direction_theta(az_count,1)));
-    ray_pos_x_bound=(ray_spacing_x/4:ray_spacing_x:X)';
-    ray_pos_y_bound=(ray_spacing_y/4:ray_spacing_y:Y)';
+    ray_pos_x_bound=(ray_spacing_x/2:ray_spacing_x:X)';
+    ray_pos_y_bound=(ray_spacing_y/2:ray_spacing_y:Y)';
 
 
 
@@ -450,7 +451,7 @@ for az_count=N_a/2+1:3*N_a/4
             end
         end
     end
- 
+
     p_y=1; % y index of ray position
     
     i_x=mesh_center_abscissa_number; %mesh index x direction
@@ -494,12 +495,10 @@ for az_count=N_a/2+1:3*N_a/4
             end
         end
     end
+
 end
- %}
-
-
-%% sweep code
-
+ 
+%}
 
 
 
