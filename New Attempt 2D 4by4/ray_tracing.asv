@@ -54,12 +54,12 @@ alt_azim_theta=zeros(azimuthal_discretization_number,1);
 %ray spacing
 init_d=zeros(azimuthal_discretization_number,1);
 fin_d=zeros(azimuthal_discretization_number,1);
-init_d(:,1)=0.01;
+init_d(:,1)=0.3;
 
 length_of_rays=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number);
 
 ray_index_count=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number);
-
+%{
 
 %% bottom to top rays
 
@@ -105,18 +105,16 @@ for az_count=1:N_a/4
                 x_old=x_new;
                 y_old=y_new;
             elseif abs(y_new-dy*in_dy)<10^(-5)
-                plot([x_old, x_new], [y_old, y_new]);
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                 
+                 plot([x_old, x_new], [y_old, y_new]);
                 in_dx=in_dx+1;
                 in_dy=in_dy+1;
                 x_old=x_new;
                 y_old=y_new;
 
             else
-                 plot([x_old, x_new], [y_old, y_new]);
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                
+                 plot([x_old, x_new], [y_old, y_new]);
                 in_dx=in_dx+1;
                 x_old=x_new;
                 y_old=y_new;
@@ -150,9 +148,8 @@ for az_count=1:N_a/4
                 x_old=x_new;
                 y_old=y_new;
             elseif abs(y_new-dy*in_dy)<10^(-5)
-                plot([x_old, x_new], [y_old, y_new]);
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                 
+                 plot([x_old, x_new], [y_old, y_new]);
                 in_dx=in_dx+1;
                 in_dy=in_dy+1;
                 x_old=x_new;
@@ -160,9 +157,8 @@ for az_count=1:N_a/4
 
             
             else
-                 plot([x_old, x_new], [y_old, y_new]);
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                
+                 plot([x_old, x_new], [y_old, y_new]);
                 in_dx=in_dx+1;
                 x_old=x_new;
                 y_old=y_new;
@@ -171,7 +167,7 @@ for az_count=1:N_a/4
     end
 end
 
-%{
+%}
   
 %right to left angle greater than pi/2 less than pi
 for az_count=N_a/4+1:N_a/2
@@ -191,7 +187,7 @@ for az_count=N_a/4+1:N_a/2
 
     i_x=mesh_center_abscissa_number;
 
-    for p_y=num_y_rays:-1:1
+    for p_y=1:num_y_rays
         
         i_y=ceil(ray_pos_y_bound(p_y,1)/dy);
 
@@ -235,7 +231,7 @@ for az_count=N_a/4+1:N_a/2
 
     i_y=1;
 
-    for p_x=num_x_rays:-1:1
+    for p_x=1:num_x_rays
         i_x=ceil(ray_pos_x_bound(p_x,1));
 
         in_dx=i_x;
