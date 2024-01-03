@@ -1,3 +1,6 @@
+function [exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d]=ray_tracing_polar_included
+
+[alt_azim_theta,length_of_rays,fin_d]=ray_tracing;
 %given data 
 
 sigma_t=1;
@@ -9,8 +12,8 @@ nu_sigma_f=0.39;
 X=4;
 Y=4;
 
-dx=0.5;
-dy=0.5;
+dx=0.1;
+dy=0.1;
 
 x=(0:dx:X)';
 y=(0:dy:Y)';
@@ -47,8 +50,8 @@ weight_azimuthal(1,1)=0.5*(alt_azim_theta(1,1)+alt_azim_theta(2,1));
 weight_azimuthal(end,1)=0.5*(2*pi-alt_azim_theta(end-1,1)+alt_azim_theta(1,1));
 
 ray_index_count=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,polar_discretization_number);
-s_len=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,polar_discretization_number,10);
-exponential_portion=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,polar_discretization_number,10);
+s_len=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,polar_discretization_number,100);
+exponential_portion=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,polar_discretization_number,100);
 sum_s_len=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,polar_discretization_number);
 
 %% bottom to top rays

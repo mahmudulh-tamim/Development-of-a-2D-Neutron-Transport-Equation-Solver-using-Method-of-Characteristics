@@ -1,4 +1,4 @@
-function [alt_azim_theta,length_of_rays,fin_d]=ray_tracing
+
 
 
 %given data 
@@ -23,7 +23,19 @@ mesh_center_y=(dy/2:dy:Y)';
 mesh_center_abscissa_number=length(mesh_center_x);
 mesh_center_ordinate_number=length(mesh_center_y);
 
-
+%% plotting ray tracing initialization
+figure(1)
+hold on;
+ax = gca;
+ax.XAxis.MinorTick = 'on';
+ax.XAxis.MinorTickValues =0:0.1:4;
+grid on;
+ax.XMinorGrid = 'on';
+ax.YAxis.MinorTick = 'on';
+ax.YAxis.MinorTickValues =0:0.1:4;
+grid on;
+ax.YMinorGrid = 'on';
+title("Ray Tracing Plot For 2D First Problem")
 
 %% angular discretization
 
@@ -45,9 +57,9 @@ alt_azim_theta=zeros(azimuthal_discretization_number,1);
 %ray spacing
 init_d=zeros(azimuthal_discretization_number,1);
 fin_d=zeros(azimuthal_discretization_number,1);
-init_d(:,1)=0.05;
+init_d(:,1)=0.04;
 
-length_of_rays=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,100);
+length_of_rays=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number);
 
 ray_index_count=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number);
 
@@ -96,13 +108,13 @@ for az_count=1:N_a/4
             if y_new>dy*in_dy && abs(y_new-dy*in_dy)>10^(-5) 
                 y_new=dy*in_dy;
                 x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
-                 
+                 plot([x_old, x_new], [y_old, y_new]);
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
                 in_dy=in_dy+1;
                 x_old=x_new;
                 y_old=y_new;
             elseif abs(y_new-dy*in_dy)<=10^(-5) 
-                
+                plot([x_old, x_new], [y_old, y_new]);
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
                  
                 in_dx=in_dx+1;
@@ -111,7 +123,7 @@ for az_count=1:N_a/4
                 y_old=y_new;
 
             else
-                 
+                 plot([x_old, x_new], [y_old, y_new]);
               
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
                 
@@ -146,13 +158,13 @@ for az_count=1:N_a/4
             if y_new>dy*in_dy && abs(y_new-dy*in_dy)>10^(-5)
                 y_new=dy*in_dy;
                 x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
-                 
+                 plot([x_old, x_new], [y_old, y_new]);
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
                 in_dy=in_dy+1;
                 x_old=x_new;
                 y_old=y_new;
             elseif abs(y_new-dy*in_dy)<10^(-5)
-                
+                plot([x_old, x_new], [y_old, y_new]);
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
                  
                 in_dx=in_dx+1;
@@ -162,7 +174,7 @@ for az_count=1:N_a/4
 
             
             else
-                 
+                 plot([x_old, x_new], [y_old, y_new]);
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
                 
                 in_dx=in_dx+1;
@@ -217,13 +229,13 @@ for az_count=N_a/4+1:N_a/2
             if y_new>dy*in_dy && abs(y_new-dy*in_dy)>10^(-5)
                 y_new=dy*in_dy;
                 x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
-                 
+                 plot([x_old, x_new], [y_old, y_new]);
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
                 in_dy=in_dy+1;
                 x_old=x_new;
                 y_old=y_new;
             elseif abs(y_new-dy*in_dy)<10^(-5)
-                
+                plot([x_old, x_new], [y_old, y_new]);
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
                  
                 in_dx=in_dx-1;
@@ -232,7 +244,7 @@ for az_count=N_a/4+1:N_a/2
                 y_old=y_new;
 
             else
-                
+                plot([x_old, x_new], [y_old, y_new]);
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
                  
                 in_dx=in_dx-1;
@@ -268,13 +280,13 @@ for az_count=N_a/4+1:N_a/2
             if y_new>dy*in_dy && abs(y_new-dy*in_dy)>10^(-5)
                 y_new=dy*in_dy;
                 x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
-                
+                plot([x_old, x_new], [y_old, y_new]);
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
                 in_dy=in_dy+1;
                 x_old=x_new;
                 y_old=y_new;
             elseif abs(y_new-dy*in_dy)<10^(-5)
-                
+                plot([x_old, x_new], [y_old, y_new]);
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
                  
                 in_dx=in_dx-1;
@@ -283,7 +295,7 @@ for az_count=N_a/4+1:N_a/2
                 y_old=y_new;
 
             else
-                
+                plot([x_old, x_new], [y_old, y_new]);
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
                 
                 in_dx=in_dx-1;
@@ -337,14 +349,14 @@ for az_count=3*N_a/4+1:N_a
             if y_new<dy*(in_dy-1) && abs(y_new-dy*(in_dy-1))>10^(-5)
                 y_new=dy*(in_dy-1);
                 x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
-                 
+                 plot([x_old, x_new], [y_old, y_new]);
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
                 in_dy=in_dy-1;
                 x_old=x_new;
                 y_old=y_new;
             elseif abs(y_new-dy*(in_dy-1))<10^(-5)
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                 
+                 plot([x_old, x_new], [y_old, y_new]);
                 in_dx=in_dx+1;
                 in_dy=in_dy-1;
                 x_old=x_new;
@@ -352,7 +364,7 @@ for az_count=3*N_a/4+1:N_a
 
             else
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                 
+                 plot([x_old, x_new], [y_old, y_new]);
                 in_dx=in_dx+1;
                 x_old=x_new;
                 y_old=y_new;
@@ -384,14 +396,14 @@ for az_count=3*N_a/4+1:N_a
             if y_new<dy*(in_dy-1) && abs(y_new-dy*(in_dy-1))>10^(-5)
                 y_new=dy*(in_dy-1);
                 x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
-                 
+                 plot([x_old, x_new], [y_old, y_new]);
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
                 in_dy=in_dy-1;
                 x_old=x_new;
                 y_old=y_new;
             elseif abs(y_new-dy*(in_dy-1))<10^(-5)
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                 
+                 plot([x_old, x_new], [y_old, y_new]);
                 in_dx=in_dx+1;
                 in_dy=in_dy-1;
                 x_old=x_new;
@@ -399,7 +411,7 @@ for az_count=3*N_a/4+1:N_a
 
             else
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                 
+                 plot([x_old, x_new], [y_old, y_new]);
                 in_dx=in_dx+1;
                 x_old=x_new;
                 y_old=y_new;
@@ -451,14 +463,14 @@ for az_count=N_a/2+1:3*N_a/4
             if y_new<dy*(in_dy-1)&& abs(y_new-dy*(in_dy-1))>10^(-5)
                 y_new=dy*(in_dy-1);
                 x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
-                 
+                 plot([x_old, x_new], [y_old, y_new]);
                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
                 in_dy=in_dy-1;
                 x_old=x_new;
                 y_old=y_new;
            elseif abs(y_new-dy*(in_dy-1))<10^(-5)
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                 
+                 plot([x_old, x_new], [y_old, y_new]);
                 in_dx=in_dx-1;
                 in_dy=in_dy-1;
                 x_old=x_new;
@@ -467,7 +479,7 @@ for az_count=N_a/2+1:3*N_a/4
                 
             else
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                 
+                 plot([x_old, x_new], [y_old, y_new]);
                 in_dx=in_dx-1;
                 x_old=x_new;
                 y_old=y_new;
@@ -503,14 +515,14 @@ for az_count=N_a/2+1:3*N_a/4
             if y_new<dy*(in_dy-1) && abs(y_new-dy*(in_dy-1))>10^(-5)
                 y_new=dy*(in_dy-1);
                 x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
-                
+                plot([x_old, x_new], [y_old, y_new]);
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
                 in_dy=in_dy-1;
                 x_old=x_new;
                 y_old=y_new;
             elseif abs(y_new-dy*(in_dy-1))<10^(-5)
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                 
+                 plot([x_old, x_new], [y_old, y_new]);
                 in_dx=in_dx-1;
                 in_dy=in_dy-1;
                 x_old=x_new;
@@ -518,7 +530,7 @@ for az_count=N_a/2+1:3*N_a/4
 
             else
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                
+                plot([x_old, x_new], [y_old, y_new]);
                 in_dx=in_dx-1;
                 x_old=x_new;
                 y_old=y_new;

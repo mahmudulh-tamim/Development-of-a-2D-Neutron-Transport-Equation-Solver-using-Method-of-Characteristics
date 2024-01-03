@@ -1,5 +1,10 @@
+function scaler_flux=transport_sweep(S,exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d)
+
 %given data 
-S=ones(mesh_center_ordinate_number,mesh_center_abscissa_number);
+
+
+%given data 
+
 sigma_t=1;
 sigma_s=0.7;
 nu_sigma_f=0.39;
@@ -9,8 +14,8 @@ nu_sigma_f=0.39;
 X=4;
 Y=4;
 
-dx=0.5;
-dy=0.5;
+dx=0.1;
+dy=0.1;
 
 x=(0:dx:X)';
 y=(0:dy:Y)';
@@ -48,9 +53,9 @@ weight_azimuthal(end,1)=0.5*(2*pi-alt_azim_theta(end-1,1)+alt_azim_theta(1,1));
 
 ray_index_count=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,polar_discretization_number);
 
-psi_in=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,polar_discretization_number,10);
-psi_out=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,polar_discretization_number,10);
-del_psi=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,polar_discretization_number,10);
+psi_in=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,polar_discretization_number,100);
+psi_out=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,polar_discretization_number,100);
+del_psi=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,polar_discretization_number,100);
 avg_psi=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,polar_discretization_number);
 
 scaler_flux=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number);
@@ -917,5 +922,3 @@ for az_count=N_a/2+1:3*N_a/4
     end
 
 end
-figure(3)
-mesh(mesh_center_x,mesh_center_y,scaler_flux)
