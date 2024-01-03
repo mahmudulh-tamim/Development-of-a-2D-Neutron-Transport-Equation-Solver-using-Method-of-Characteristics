@@ -86,77 +86,33 @@ for az_count=1:N_a/4
                     if abs(y_old-dy*in_dy)<10^(-5) 
                             x_new=dx*in_dx;
                             y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
-                            if y_new>dy*(in_dy+1) && abs(y_new-dy*in_dy)>10^(-5) 
-                                if in_dx==1
-                                    psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=0;
-                                else
-                                    psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
-            
-                                end
-            
-                                del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=(psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-S(in_dy,in_dx)/sigma_t)*exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-                                psi_out(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-            
-                                avg_psi(in_dy,in_dx,az_count,pol_count)=avg_psi(in_dy,in_dx,az_count,pol_count)+del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count))+S(in_dy,in_dx)*s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count));
-        
-            
-                                scaler_flux(in_dy,in_dx)=scaler_flux(in_dy,in_dx)+avg_psi(in_dy,in_dx,az_count,pol_count)*weight_azimuthal(az_count,1)*w(pol_count,1);
-        
-                                
-                                in_dx_old=in_dx;
-                                in_dy_old=in_dy;
-                                in_dy=in_dy+2;
-                                x_old=x_new;
-                                y_old=y_new;
-                        elseif abs(y_new-dy*in_dy)<=10^(-5) 
-                            if in_dx==1
-                                psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=0;
-                            else
-                                psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
-        
-                            end
-    
-                            del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=(psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-S(in_dy,in_dx)/sigma_t)*exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-                            psi_out(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-        
-                            avg_psi(in_dy,in_dx,az_count,pol_count)=avg_psi(in_dy,in_dx,az_count,pol_count)+del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count))+S(in_dy,in_dx)*s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count));
-    
-        
-                            scaler_flux(in_dy,in_dx)=scaler_flux(in_dy,in_dx)+avg_psi(in_dy,in_dx,az_count,pol_count)*weight_azimuthal(az_count,1)*w(pol_count,1);
-    
-                            
-                            in_dx_old=in_dx;
-                            in_dy_old=in_dy;
+                        if y_new>dy*(in_dy+1) && abs(y_new-dy*in_dy)>10^(-5) 
+                            y_new=dy*(in_dy+1);
+                            x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
+                             s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                            exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
+                            sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 
+                            in_dy=in_dy+2;
+                            x_old=x_new;
+                            y_old=y_new;
+                        elseif abs(y_new-dy*in_dy)<=10^(-5) 
+                            s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                            exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
+                            sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));                           
                             in_dy=in_dy+2;
                             in_dx=in_dx+1;
                             x_old=x_new;
                             y_old=y_new;
             
                         else
-                            if in_dx==1
-                                psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=0;
-                            else
-                                psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
-        
-                            end
-        
-                            del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=(psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-S(in_dy,in_dx)/sigma_t)*exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-                            psi_out(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-        
-                            avg_psi(in_dy,in_dx,az_count,pol_count)=avg_psi(in_dy,in_dx,az_count,pol_count)+del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count))+S(in_dy,in_dx)*s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count));
-    
-        
-                            scaler_flux(in_dy,in_dx)=scaler_flux(in_dy,in_dx)+avg_psi(in_dy,in_dx,az_count,pol_count)*weight_azimuthal(az_count,1)*w(pol_count,1);
-    
-                            
-                            in_dx_old=in_dx;
-                            in_dy_old=in_dy;
-
+                             s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                            exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
+                            sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));                           
                             in_dx=in_dx+1;
                             x_old=x_new;
                             y_old=y_new;
-                       end
+                        end
                         continue;
                     end
                     
@@ -255,84 +211,6 @@ for az_count=1:N_a/4
         
                 while in_dx<=mesh_center_abscissa_number && in_dy<=mesh_center_ordinate_number
                     ray_index_count(in_dy,in_dx,az_count,pol_count)=ray_index_count(in_dy,in_dx,az_count,pol_count)+1;
-                    if abs(x_old-dx*in_dx)<10^(-5) 
-                            x_new=dx*(in_dx+1);
-                            y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
-                            if y_new>dy*(in_dy+1) && abs(y_new-dy*in_dy)>10^(-5) 
-                                if in_dy==1
-                                    psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=0;
-                                else
-                                    psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
-            
-                                end
-            
-                                del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=(psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-S(in_dy,in_dx)/sigma_t)*exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-                                psi_out(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-            
-                                avg_psi(in_dy,in_dx,az_count,pol_count)=avg_psi(in_dy,in_dx,az_count,pol_count)+del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count))+S(in_dy,in_dx)*s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count));
-        
-            
-                                scaler_flux(in_dy,in_dx)=scaler_flux(in_dy,in_dx)+avg_psi(in_dy,in_dx,az_count,pol_count)*weight_azimuthal(az_count,1)*w(pol_count,1);
-        
-                                
-                                in_dx_old=in_dx;
-                                in_dy_old=in_dy;
-                                in_dy=in_dy+1;
-                                x_old=x_new;
-                                y_old=y_new;
-                        elseif abs(y_new-dy*in_dy)<=10^(-5) 
-                            if in_dy==1
-                                psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=0;
-                            else
-                                psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
-        
-                            end
-    
-                            del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=(psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-S(in_dy,in_dx)/sigma_t)*exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-                            psi_out(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-        
-                            avg_psi(in_dy,in_dx,az_count,pol_count)=avg_psi(in_dy,in_dx,az_count,pol_count)+del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count))+S(in_dy,in_dx)*s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count));
-    
-        
-                            scaler_flux(in_dy,in_dx)=scaler_flux(in_dy,in_dx)+avg_psi(in_dy,in_dx,az_count,pol_count)*weight_azimuthal(az_count,1)*w(pol_count,1);
-    
-                            
-                            in_dx_old=in_dx;
-                            in_dy_old=in_dy;
-
-                            in_dy=in_dy+1;
-                            in_dx=in_dx+2;
-                            x_old=x_new;
-                            y_old=y_new;
-            
-                        else
-                            if in_dy==1
-                                psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=0;
-                            else
-                                psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
-        
-                            end
-        
-                            del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=(psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-S(in_dy,in_dx)/sigma_t)*exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-                            psi_out(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-        
-                            avg_psi(in_dy,in_dx,az_count,pol_count)=avg_psi(in_dy,in_dx,az_count,pol_count)+del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count))+S(in_dy,in_dx)*s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count));
-    
-        
-                            scaler_flux(in_dy,in_dx)=scaler_flux(in_dy,in_dx)+avg_psi(in_dy,in_dx,az_count,pol_count)*weight_azimuthal(az_count,1)*w(pol_count,1);
-    
-                            
-                            in_dx_old=in_dx;
-                            in_dy_old=in_dy;
-
-                            in_dx=in_dx+2;
-                            x_old=x_new;
-                            y_old=y_new;
-                       end
-                        continue;
-                    end
-
-
                     x_new=dx*in_dx;
                     y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
         
