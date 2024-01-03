@@ -83,7 +83,11 @@ for az_count=1:N_a/4
 
     for p_y=num_y_rays:-1:1
 
-        i_y=ceil(ray_pos_y_bound(p_y,1)/dy);
+        if abs(ceil(ray_pos_y_bound(p_y,1)/dy)-ray_pos_y_bound(p_y,1)/dy)>10^(-5)
+            i_y=ceil(ray_pos_y_bound(p_y,1)/dy);
+        else
+            i_y=ceil(ray_pos_y_bound(p_y,1)/dy)+1;
+        end
         
         in_dx=i_x;
         in_dy=i_y;
@@ -93,37 +97,7 @@ for az_count=1:N_a/4
 
         while in_dx<=mesh_center_abscissa_number && in_dy<=mesh_center_ordinate_number
             ray_index_count(in_dy,in_dx,az_count)=ray_index_count(in_dy,in_dx,az_count)+1;
-            if abs(y_old-dy*in_dy)<10^(-5) 
-                x_new=dx*in_dx;
-                y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
-                if y_new>dy*(in_dy+1) && abs(y_new-dy*in_dy)>10^(-5) 
-                    y_new=dy*(in_dy+1);
-                    x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
-                     plot([x_old, x_new], [y_old, y_new]);
-                    length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                    in_dy=in_dy+2;
-                    x_old=x_new;
-                    y_old=y_new;
-                elseif abs(y_new-dy*in_dy)<=10^(-5) 
-                    plot([x_old, x_new], [y_old, y_new]);
-                    length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                     
-                    in_dx=in_dx+1;
-                    in_dy=in_dy+2;
-                    x_old=x_new;
-                    y_old=y_new;
-    
-                else
-                     plot([x_old, x_new], [y_old, y_new]);
-                  
-                    length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                    
-                    in_dx=in_dx+1;
-                    x_old=x_new;
-                    y_old=y_new;
-                end
-                continue;
-            end
+            
 
             x_new=dx*in_dx;
             y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
@@ -160,8 +134,11 @@ for az_count=1:N_a/4
     i_y=1;
 
     for p_x=1:num_x_rays
-
-        i_x=ceil(ray_pos_x_bound(p_x,1)/dx);
+        if abs(ceil(ray_pos_x_bound(p_x,1)/dx)-ray_pos_x_bound(p_x,1)/dx)>10^(-5)
+            i_x=ceil(ray_pos_x_bound(p_x,1)/dx);
+        else
+            i_x=ceil(ray_pos_x_bound(p_x,1)/dx)+1;
+        end
         
         in_dx=i_x;
         in_dy=i_y;
@@ -171,37 +148,7 @@ for az_count=1:N_a/4
 
         while in_dx<=mesh_center_abscissa_number && in_dy<=mesh_center_ordinate_number
             ray_index_count(in_dy,in_dx,az_count)=ray_index_count(in_dy,in_dx,az_count)+1;
-            if abs(x_old-dx*in_dx)<10^(-5) 
-                x_new=dx*(in_dx+1);
-                y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
-                if y_new>dy*(in_dy+1) && abs(y_new-dy*in_dy)>10^(-5) 
-                    y_new=dy*(in_dy+1);
-                    x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
-                     plot([x_old, x_new], [y_old, y_new]);
-                    length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                    in_dy=in_dy+1;
-                    x_old=x_new;
-                    y_old=y_new;
-                elseif abs(y_new-dy*in_dy)<=10^(-5) 
-                    plot([x_old, x_new], [y_old, y_new]);
-                    length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                     
-                    in_dx=in_dx+2;
-                    in_dy=in_dy+1;
-                    x_old=x_new;
-                    y_old=y_new;
-    
-                else
-                     plot([x_old, x_new], [y_old, y_new]);
-                  
-                    length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                    
-                    in_dx=in_dx+2;
-                    x_old=x_new;
-                    y_old=y_new;
-                end
-                continue;
-            end
+            
             x_new=dx*in_dx;
             y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
 
@@ -235,7 +182,7 @@ for az_count=1:N_a/4
     end
 end
 
-%}
+
  
 %right to left angle greater than pi/2 less than pi
 for az_count=N_a/4+1:N_a/2
@@ -257,7 +204,11 @@ for az_count=N_a/4+1:N_a/2
 
     for p_y=num_y_rays:-1:1
         
-        i_y=ceil(ray_pos_y_bound(p_y,1)/dy);
+        if abs(ceil(ray_pos_y_bound(p_y,1)/dy)-ray_pos_y_bound(p_y,1)/dy)>10^(-5)
+            i_y=ceil(ray_pos_y_bound(p_y,1)/dy);
+        else
+            i_y=ceil(ray_pos_y_bound(p_y,1)/dy)+1;
+        end
 
         in_dx=i_x;
         in_dy=i_y;
@@ -267,7 +218,7 @@ for az_count=N_a/4+1:N_a/2
 
         while in_dx>=1 && in_dy<=mesh_center_ordinate_number
             ray_index_count(in_dy,in_dx,az_count)=ray_index_count(in_dy,in_dx,az_count)+1;
-
+            
             
             x_new=dx*(in_dx-1);
             y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
@@ -304,8 +255,11 @@ for az_count=N_a/4+1:N_a/2
     i_y=1;
 
     for p_x=num_x_rays:-1:1
-        i_x=ceil(ray_pos_x_bound(p_x,1)/dx);
-
+        if abs(floor(ray_pos_x_bound(p_x,1)/dx)-ray_pos_x_bound(p_x,1)/dx)>10^(-5)
+            i_x=ceil(ray_pos_x_bound(p_x,1)/dx);
+        else 
+            i_x=floor(ray_pos_x_bound(p_x,1)/dx);
+        end
         in_dx=i_x;
         in_dy=i_y;
 
@@ -314,6 +268,8 @@ for az_count=N_a/4+1:N_a/2
 
         while in_dx>=1 && in_dy<=mesh_center_ordinate_number
             ray_index_count(in_dy,in_dx,az_count)=ray_index_count(in_dy,in_dx,az_count)+1;
+
+            
             x_new=dx*(in_dx-1);
           
             y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
@@ -348,11 +304,9 @@ for az_count=N_a/4+1:N_a/2
 
 end
 
-
 %% top to bottom rays
 
-
-%left to right angle less than pi/2
+%left to right angle less than 2pi greater than 3pi/2
 for az_count=3*N_a/4+1:N_a
     n_x=ceil(abs((X)*sin(azimuthal_direction_theta(az_count,1))/init_d(az_count)));
     n_y=ceil(abs((Y)*cos(azimuthal_direction_theta(az_count,1))/init_d(az_count)));
@@ -372,7 +326,11 @@ for az_count=3*N_a/4+1:N_a
 
     for p_y=1:num_y_rays
 
-        i_y=ceil(ray_pos_y_bound(p_y,1)/dy);
+        if abs(floor(ray_pos_y_bound(p_y,1)/dy)-ray_pos_y_bound(p_y,1)/dy)>10^(-5)
+            i_y=ceil(ray_pos_y_bound(p_y,1)/dy);
+        else 
+            i_y=floor(ray_pos_y_bound(p_y,1)/dy);
+        end
         
         in_dx=i_x;
         in_dy=i_y;
@@ -415,7 +373,11 @@ for az_count=3*N_a/4+1:N_a
 
     for p_x=1:num_x_rays
 
-        i_x=ceil(ray_pos_x_bound(p_x,1)/dx);
+        if abs(ceil(ray_pos_x_bound(p_x,1)/dx)-ray_pos_x_bound(p_x,1)/dx)>10^(-5)
+            i_x=ceil(ray_pos_x_bound(p_x,1)/dx);
+        else
+            i_x=ceil(ray_pos_x_bound(p_x,1)/dx)+1;
+        end
         
         in_dx=i_x;
         in_dy=i_y;
@@ -455,7 +417,7 @@ for az_count=3*N_a/4+1:N_a
     end
 end
 
-      
+
 %right to left angle greater than pi less than 3pi/2
 for az_count=N_a/2+1:3*N_a/4
     n_x=ceil(abs((X)*sin(azimuthal_direction_theta(az_count,1))/init_d(az_count)));
@@ -476,7 +438,13 @@ for az_count=N_a/2+1:3*N_a/4
 
     for p_y=1:num_y_rays
         
-        i_y=ceil(ray_pos_y_bound(p_y,1)/dy);
+        
+        if abs(floor(ray_pos_y_bound(p_y,1)/dy)-ray_pos_y_bound(p_y,1)/dy)>10^(-5)
+            i_y=ceil(ray_pos_y_bound(p_y,1)/dy);
+        else 
+            i_y=floor(ray_pos_y_bound(p_y,1)/dy);
+        end
+            
 
         in_dx=i_x;
         in_dy=i_y;
@@ -520,8 +488,15 @@ for az_count=N_a/2+1:3*N_a/4
     i_y=mesh_center_ordinate_number;
 
     for p_x=num_x_rays:-1:1
-        i_x=ceil(ray_pos_x_bound(p_x,1)/dx);
-
+       
+       
+        if abs(floor(ray_pos_x_bound(p_x,1)/dx)-ray_pos_x_bound(p_x,1)/dx)>10^(-5)
+            i_x=ceil(ray_pos_x_bound(p_x,1)/dx);
+        else 
+            i_x=floor(ray_pos_x_bound(p_x,1)/dx);
+        end
+           
+        
         in_dx=i_x;
         in_dy=i_y;
 
@@ -561,5 +536,3 @@ for az_count=N_a/2+1:3*N_a/4
     end
 
 end
-%}
-%}

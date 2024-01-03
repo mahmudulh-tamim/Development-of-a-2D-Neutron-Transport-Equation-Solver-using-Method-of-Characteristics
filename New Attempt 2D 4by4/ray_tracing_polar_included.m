@@ -70,7 +70,11 @@ for az_count=1:N_a/4
         
             for p_y=num_y_rays:-1:1
         
-                i_y=ceil(ray_pos_y_bound(p_y,1)/dy);
+                if abs(ceil(ray_pos_y_bound(p_y,1)/dy)-ray_pos_y_bound(p_y,1)/dy)>10^(-5)
+                    i_y=ceil(ray_pos_y_bound(p_y,1)/dy);
+                else
+                    i_y=ceil(ray_pos_y_bound(p_y,1)/dy)+1;
+                end
                 
                 in_dx=i_x;
                 in_dy=i_y;
@@ -80,38 +84,6 @@ for az_count=1:N_a/4
         
                 while in_dx<=mesh_center_abscissa_number && in_dy<=mesh_center_ordinate_number
                     ray_index_count(in_dy,in_dx,az_count,pol_count)=ray_index_count(in_dy,in_dx,az_count,pol_count)+1;
-                    if abs(y_old-dy*in_dy)<10^(-5) 
-                            x_new=dx*in_dx;
-                            y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
-                        if y_new>dy*(in_dy+1) && abs(y_new-dy*in_dy)>10^(-5) 
-                            y_new=dy*(in_dy+1);
-                            x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
-                             s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
-                            exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
-                            sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-
-                            in_dy=in_dy+2;
-                            x_old=x_new;
-                            y_old=y_new;
-                        elseif abs(y_new-dy*in_dy)<=10^(-5) 
-                            s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
-                            exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
-                            sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));                           
-                            in_dy=in_dy+2;
-                            in_dx=in_dx+1;
-                            x_old=x_new;
-                            y_old=y_new;
-            
-                        else
-                             s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
-                            exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
-                            sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));                           
-                            in_dx=in_dx+1;
-                            x_old=x_new;
-                            y_old=y_new;
-                        end
-                        continue;
-                    end
 
 
                     x_new=dx*in_dx;
@@ -154,8 +126,11 @@ for az_count=1:N_a/4
         
             for p_x=1:num_x_rays
         
-                i_x=ceil(ray_pos_x_bound(p_x,1)/dx);
-                
+                if abs(ceil(ray_pos_x_bound(p_x,1)/dx)-ray_pos_x_bound(p_x,1)/dx)>10^(-5)
+                    i_x=ceil(ray_pos_x_bound(p_x,1)/dx);
+                else
+                    i_x=ceil(ray_pos_x_bound(p_x,1)/dx)+1;
+                end
                 in_dx=i_x;
                 in_dy=i_y;
         
@@ -164,39 +139,7 @@ for az_count=1:N_a/4
         
                while in_dx<=mesh_center_abscissa_number && in_dy<=mesh_center_ordinate_number
                     ray_index_count(in_dy,in_dx,az_count,pol_count)=ray_index_count(in_dy,in_dx,az_count,pol_count)+1;
-                    if abs(x_old-dx*in_dx)<10^(-5) 
-                            x_new=dx*(in_dx+1);
-                            y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
-                        if y_new>dy*(in_dy+1) && abs(y_new-dy*in_dy)>10^(-5) 
-                            y_new=dy*(in_dy+1);
-                            x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
-                             s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
-                            exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
-                            sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-
-                            in_dy=in_dy+1;
-                            x_old=x_new;
-                            y_old=y_new;
-                        elseif abs(y_new-dy*in_dy)<=10^(-5) 
-                            s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
-                            exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
-                            sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));                            in_dx=in_dx+1;
-                            in_dy=in_dy+1;
-                            in_dx=iin_dx+2
-                            x_old=x_new;
-                            y_old=y_new;
-            
-                        else
-                             s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
-                            exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
-                            sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));                           
-                            
-                            in_dx=in_dx+2;
-                            x_old=x_new;
-                            y_old=y_new;
-                        end
-                        continue;
-                    end
+                    
                     
                     x_new=dx*in_dx;
                     y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
@@ -256,7 +199,11 @@ for az_count=N_a/4+1:N_a/2
         
             for p_y=num_y_rays:-1:1
                 
-                i_y=ceil(ray_pos_y_bound(p_y,1)/dy);
+                if abs(ceil(ray_pos_y_bound(p_y,1)/dy)-ray_pos_y_bound(p_y,1)/dy)>10^(-5)
+                    i_y=ceil(ray_pos_y_bound(p_y,1)/dy);
+                else
+                    i_y=ceil(ray_pos_y_bound(p_y,1)/dy)+1;
+                end
         
                 in_dx=i_x;
                 in_dy=i_y;
@@ -305,7 +252,12 @@ for az_count=N_a/4+1:N_a/2
             i_y=1;
         
             for p_x=num_x_rays:-1:1
-                i_x=ceil(ray_pos_x_bound(p_x,1)/dx);
+                if abs(floor(ray_pos_x_bound(p_x,1)/dx)-ray_pos_x_bound(p_x,1)/dx)>10^(-5)
+                    i_x=ceil(ray_pos_x_bound(p_x,1)/dx);
+                else 
+                    i_x=floor(ray_pos_x_bound(p_x,1)/dx);
+                end
+                
         
                 in_dx=i_x;
                 in_dy=i_y;
@@ -377,7 +329,11 @@ for az_count=3*N_a/4+1:N_a
         
             for p_y=1:num_y_rays
         
-                i_y=ceil(ray_pos_y_bound(p_y,1)/dy);
+                if abs(floor(ray_pos_y_bound(p_y,1)/dy)-ray_pos_y_bound(p_y,1)/dy)>10^(-5)
+                    i_y=ceil(ray_pos_y_bound(p_y,1)/dy);
+                else 
+                    i_y=floor(ray_pos_y_bound(p_y,1)/dy);
+                end
                 
                 in_dx=i_x;
                 in_dy=i_y;
@@ -426,7 +382,11 @@ for az_count=3*N_a/4+1:N_a
         
             for p_x=1:num_x_rays
         
-                i_x=ceil(ray_pos_x_bound(p_x,1)/dx);
+                if abs(ceil(ray_pos_x_bound(p_x,1)/dx)-ray_pos_x_bound(p_x,1)/dx)>10^(-5)
+                    i_x=ceil(ray_pos_x_bound(p_x,1)/dx);
+                else
+                    i_x=ceil(ray_pos_x_bound(p_x,1)/dx)+1;
+                end
                 
                 in_dx=i_x;
                 in_dy=i_y;
@@ -459,7 +419,7 @@ for az_count=3*N_a/4+1:N_a
                         x_old=x_new;
                         y_old=y_new;
                     else
-                         s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 
@@ -491,7 +451,11 @@ for az_count=N_a/2+1:3*N_a/4
         
             for p_y=1:num_y_rays
                 
-                i_y=ceil(ray_pos_y_bound(p_y,1)/dy);
+                if abs(floor(ray_pos_y_bound(p_y,1)/dy)-ray_pos_y_bound(p_y,1)/dy)>10^(-5)
+                    i_y=ceil(ray_pos_y_bound(p_y,1)/dy);
+                else 
+                    i_y=floor(ray_pos_y_bound(p_y,1)/dy);
+                end
         
                 in_dx=i_x;
                 in_dy=i_y;
@@ -539,7 +503,11 @@ for az_count=N_a/2+1:3*N_a/4
             i_y=mesh_center_ordinate_number;
         
             for p_x=num_x_rays:-1:1
-                i_x=ceil(ray_pos_x_bound(p_x,1)/dx);
+                if abs(floor(ray_pos_x_bound(p_x,1)/dx)-ray_pos_x_bound(p_x,1)/dx)>10^(-5)
+                    i_x=ceil(ray_pos_x_bound(p_x,1)/dx);
+                else 
+                    i_x=floor(ray_pos_x_bound(p_x,1)/dx);
+                end
         
                 in_dx=i_x;
                 in_dy=i_y;
