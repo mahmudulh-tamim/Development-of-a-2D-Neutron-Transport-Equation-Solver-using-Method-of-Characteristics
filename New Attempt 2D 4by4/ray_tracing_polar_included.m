@@ -12,8 +12,8 @@ nu_sigma_f=0.39;
 X=4;
 Y=4;
 
-dx=0.1;
-dy=0.1;
+dx=0.5;
+dy=0.5;
 
 x=(0:dx:X)';
 y=(0:dy:Y)';
@@ -98,14 +98,14 @@ for az_count=1:N_a/4
                         y_new=dy*in_dy;
                         x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
                          
-                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(mu(pol_count,1));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
                         in_dy=in_dy+1;
                         x_old=x_new;
                         y_old=y_new;
                     elseif abs(y_new-dy*in_dy)<10^(-5)
-                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(mu(pol_count,1));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 
@@ -114,7 +114,7 @@ for az_count=1:N_a/4
                         x_old=x_new;
                         y_old=y_new;
                     else
-                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(mu(pol_count,1));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 
@@ -150,7 +150,7 @@ for az_count=1:N_a/4
                     if y_new>dy*in_dy && abs(y_new-dy*in_dy)>10^(-5)
                         y_new=dy*in_dy;
                         x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
-                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(mu(pol_count,1));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 
@@ -158,7 +158,7 @@ for az_count=1:N_a/4
                         x_old=x_new;
                         y_old=y_new;
                      elseif abs(y_new-dy*in_dy)<10^(-5)
-                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(mu(pol_count,1));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 
@@ -168,7 +168,7 @@ for az_count=1:N_a/4
                         y_old=y_new;
 
                     else
-                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(mu(pol_count,1));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 
@@ -222,7 +222,7 @@ for az_count=N_a/4+1:N_a/2
                     if y_new>dy*in_dy && abs(y_new-dy*in_dy)>10^(-5)
                         y_new=dy*in_dy;
                         x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
-                         s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                         s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(mu(pol_count,1));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 
@@ -230,7 +230,7 @@ for az_count=N_a/4+1:N_a/2
                         x_old=x_new;
                         y_old=y_new;
                      elseif abs(y_new-dy*in_dy)<10^(-5)
-                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(mu(pol_count,1));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 
@@ -240,7 +240,7 @@ for az_count=N_a/4+1:N_a/2
                         y_old=y_new;
 
                     else
-                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(mu(pol_count,1));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 
@@ -277,7 +277,7 @@ for az_count=N_a/4+1:N_a/2
                     if y_new>dy*in_dy && abs(y_new-dy*in_dy)>10^(-5)
                         y_new=dy*in_dy;
                         x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
-                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(mu(pol_count,1));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 
@@ -285,7 +285,7 @@ for az_count=N_a/4+1:N_a/2
                         x_old=x_new;
                         y_old=y_new;
                      elseif abs(y_new-dy*in_dy)<10^(-5)
-                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(mu(pol_count,1));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 
@@ -295,7 +295,7 @@ for az_count=N_a/4+1:N_a/2
                         y_old=y_new;
 
                     else
-                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(mu(pol_count,1));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 
@@ -352,7 +352,7 @@ for az_count=3*N_a/4+1:N_a
                     if y_new<dy*(in_dy-1) && abs(y_new-dy*(in_dy-1))>10^(-5)
                         y_new=dy*(in_dy-1);
                         x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
-                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(mu(pol_count,1));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 
@@ -361,7 +361,7 @@ for az_count=3*N_a/4+1:N_a
                         y_old=y_new;
 
                      elseif abs(y_new-dy*(in_dy-1))<10^(-5)
-                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(mu(pol_count,1));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 
@@ -370,7 +370,7 @@ for az_count=3*N_a/4+1:N_a
                         x_old=x_new;
                         y_old=y_new;
                     else
-                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(mu(pol_count,1));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 
@@ -405,7 +405,7 @@ for az_count=3*N_a/4+1:N_a
                     if y_new<dy*(in_dy-1) && abs(y_new-dy*(in_dy-1))>10^(-5)
                         y_new=dy*(in_dy-1);
                         x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
-                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(mu(pol_count,1));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 
@@ -413,7 +413,7 @@ for az_count=3*N_a/4+1:N_a
                         x_old=x_new;
                         y_old=y_new;
                      elseif abs(y_new-dy*(in_dy-1))<10^(-5)
-                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(mu(pol_count,1));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 
@@ -422,7 +422,7 @@ for az_count=3*N_a/4+1:N_a
                         x_old=x_new;
                         y_old=y_new;
                     else
-                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(mu(pol_count,1));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 
@@ -474,7 +474,7 @@ for az_count=N_a/2+1:3*N_a/4
                     if y_new<dy*(in_dy-1)&& abs(y_new-dy*(in_dy-1))>10^(-5)
                         y_new=dy*(in_dy-1);
                         x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
-                         s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                         s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(mu(pol_count,1));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 
@@ -482,7 +482,7 @@ for az_count=N_a/2+1:3*N_a/4
                         x_old=x_new;
                         y_old=y_new;
                      elseif abs(y_new-dy*(in_dy-1))<10^(-5)
-                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(mu(pol_count,1));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 
@@ -491,7 +491,7 @@ for az_count=N_a/2+1:3*N_a/4
                         x_old=x_new;
                         y_old=y_new;
                     else
-                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(mu(pol_count,1));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 
@@ -527,7 +527,7 @@ for az_count=N_a/2+1:3*N_a/4
                     if y_new<dy*(in_dy-1) && abs(y_new-dy*(in_dy-1))>10^(-5)
                         y_new=dy*(in_dy-1);
                         x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
-                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(mu(pol_count,1));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 
@@ -535,7 +535,7 @@ for az_count=N_a/2+1:3*N_a/4
                         x_old=x_new;
                         y_old=y_new;
                      elseif abs(y_new-dy*(in_dy-1))<10^(-5)
-                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(mu(pol_count,1));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 
@@ -545,7 +545,7 @@ for az_count=N_a/2+1:3*N_a/4
                         y_old=y_new;
 
                     else
-                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(sin(mu(pol_count,1)));
+                        s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/abs(mu(pol_count,1));
                         exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=1-exp(-sigma_t*s_len(in_dy,in_dx,az_count,pol_count, ray_index_count(in_dy,in_dx,az_count,pol_count)));
                         sum_s_len(in_dy,in_dx,az_count,pol_count)=sum_s_len(in_dy,in_dx,az_count,pol_count)+s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
 

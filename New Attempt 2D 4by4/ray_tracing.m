@@ -12,8 +12,8 @@ nu_sigma_f=0.39;
 X=4;
 Y=4;
 
-dx=0.1;
-dy=0.1;
+dx=0.5;
+dy=0.5;
 
 x=(0:dx:X)';
 y=(0:dy:Y)';
@@ -45,7 +45,7 @@ alt_azim_theta=zeros(azimuthal_discretization_number,1);
 %ray spacing
 init_d=zeros(azimuthal_discretization_number,1);
 fin_d=zeros(azimuthal_discretization_number,1);
-init_d(:,1)=0.05;
+init_d(:,1)=0.2;
 
 length_of_rays=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,100);
 
