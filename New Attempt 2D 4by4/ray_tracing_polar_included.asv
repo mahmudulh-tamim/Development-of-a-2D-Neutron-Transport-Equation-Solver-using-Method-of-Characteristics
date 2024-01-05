@@ -28,12 +28,16 @@ mesh_center_ordinate_number=length(mesh_center_y);
 %% angular discretization
 
 %polar discretization
-
-mu=[0.932954;0.537707;0.166648];
-w=[0.670148;0.283619;0.046233];
+%{
+mu=[0.932954;0.537707;0.166648;-0.166648;-0.537707;-0.932954];
+w=[0.670148;0.283619;0.046233;0.046233;0.283619;0.670148];
 polar_discretization_number=size(mu,1);
+%}
+N_p=64;
+[mu, w] =lgwt(N_p,-1,1);
+
 %azimuthal discretization
-N_a=32;
+N_a=64;
 del_theta=2*pi/N_a;
 theta=(0:del_theta:2*pi)';
 azimuthal_direction_theta= 0.5*(theta(1:end-1,1)+theta(2:end,1));

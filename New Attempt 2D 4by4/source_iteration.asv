@@ -32,8 +32,8 @@ source_term=(fission_term+scattering_term);
 
 flux_new=transport_sweep(source_term,exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d);
 
-iteration=1;
-%{
+iteration=1
+
 while max(max(abs(flux_new-flux_old)))>tol
     flux_old=flux_new;
     scattering_term=sigma_s*flux_old;
@@ -44,4 +44,4 @@ while max(max(abs(flux_new-flux_old)))>tol
 
     iteration=1+iteration
 end
-%}
+
