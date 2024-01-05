@@ -30,7 +30,7 @@ mesh_center_ordinate_number=length(mesh_center_y);
 %polar discretization
 
 mu=[0.932954;0.537707;0.166648];
-w=[0.670148;0.283619;0.046233];
+w=2*[0.670148;0.283619;0.046233];
 polar_discretization_number=size(mu,1);
 
 %azimuthal discretization
