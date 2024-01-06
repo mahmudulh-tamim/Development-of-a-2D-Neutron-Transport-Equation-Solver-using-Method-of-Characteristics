@@ -5,7 +5,7 @@ function [k_new, flux_new]=power_iteration()
 
 
 %given data
-tol=10^(-7);
+tol=10^(-14);
 
 
 sigma_t=1;
@@ -17,8 +17,8 @@ nu_sigma_f=0.39;
 X=4;
 Y=4;
 
-dx=0.1;
-dy=0.1;
+dx=0.05;
+dy=0.05;
 
 x=(0:dx:X)';
 y=(0:dx:Y)';

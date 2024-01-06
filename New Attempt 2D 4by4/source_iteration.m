@@ -1,7 +1,7 @@
 function flux_new=source_iteration(flux_old, k_old,exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d)
 
 %given data
-tol=10^(-7);
+tol=10^(-14);
 
 
 sigma_t=1;
@@ -13,8 +13,8 @@ nu_sigma_f=0.39;
 X=4;
 Y=4;
 
-dx=0.1;
-dy=0.1;
+dx=0.05;
+dy=0.05;
 
 x=(0:dx:X)';
 y=(0:dy:Y)';
@@ -28,7 +28,7 @@ fission_term= (1/k_old)*nu_sigma_f*flux_old;
 
 scattering_term=sigma_s*flux_old;
 
-source_term=(fission_term+scattering_term);
+source_term=(fission_term+scattering_term)/(4*pi);
 
 flux_new=transport_sweep(source_term,exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d);
 
