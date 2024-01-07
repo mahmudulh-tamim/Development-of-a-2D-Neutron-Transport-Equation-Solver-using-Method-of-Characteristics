@@ -1,22 +1,9 @@
-function [alt_azim_theta,length_of_rays,fin_d,sum_len]=ray_tracing()
+function [alt_azim_theta,length_of_rays,fin_d,sum_len]=ray_tracing(X,Y,dx,dy,N_a)
 
 
-%given data 
-
-sigma_t=1;
-sigma_s=0.7;
-nu_sigma_f=0.39;
+ray_spacing=0.01;
 
 
-%spatial discretization
-X=4;
-Y=4;
-
-dx=0.02;
-dy=0.02;
-
-x=(0:dx:X)';
-y=(0:dy:Y)';
 
 mesh_center_x=(dx/2:dx:X)';
 mesh_center_y=(dy/2:dy:Y)';
@@ -27,14 +14,10 @@ mesh_center_ordinate_number=length(mesh_center_y);
 
 %% angular discretization
 
-%polar discretization
 
-mu=[0.932954;0.537707;0.166648];
-w=2*[0.670148;0.283619;0.046233];
-polar_discretization_number=size(mu,1);
 
 %azimuthal discretization
-N_a=64;
+
 del_theta=2*pi/N_a;
 theta=(0:del_theta:2*pi)';
 azimuthal_direction_theta= 0.5*(theta(1:end-1,1)+theta(2:end,1));
@@ -45,7 +28,7 @@ alt_azim_theta=zeros(azimuthal_discretization_number,1);
 %ray spacing
 init_d=zeros(azimuthal_discretization_number,1);
 fin_d=zeros(azimuthal_discretization_number,1);
-init_d(:,1)=0.002;
+init_d(:,1)=ray_spacing;
 
 length_of_rays=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,100);
 sum_len=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number);

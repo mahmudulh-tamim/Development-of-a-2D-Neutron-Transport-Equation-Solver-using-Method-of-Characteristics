@@ -13,8 +13,8 @@ nu_sigma_f=0.39;
 X=4;
 Y=4;
 
-dx=0.05;
-dy=0.05;
+dx=0.02;
+dy=0.02;
 
 x=(0:dx:X)';
 y=(0:dy:Y)';
@@ -42,6 +42,8 @@ while max(max(abs(flux_new-flux_old)))>tol
 
     flux_new=transport_sweep(source_term,exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d);
 
-    iteration=1+iteration
+    iteration=1+iteration;
 end
+
+iteration
 %}
