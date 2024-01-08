@@ -12,8 +12,8 @@ nu_sigma_f=0.39;
 X=4;
 Y=4;
 
-dx=0.02;
-dy=0.02;
+dx=0.05;
+dy=0.05;
 
 x=(0:dx:X)';
 y=(0:dy:Y)';
@@ -45,7 +45,7 @@ alt_azim_theta=zeros(azimuthal_discretization_number,1);
 %ray spacing
 init_d=zeros(azimuthal_discretization_number,1);
 fin_d=zeros(azimuthal_discretization_number,1);
-init_d(:,1)=0.002;
+init_d(:,1)=0.001;
 
 length_of_rays=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,100);
 sum_len=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number);
@@ -75,7 +75,7 @@ for az_count=1:N_a/4
 
     for p_y=num_y_rays:-1:1
 
-        if abs(ceil(ray_pos_y_bound(p_y,1)/dy)-ray_pos_y_bound(p_y,1)/dy)>10^(-14)
+        if abs(ceil(ray_pos_y_bound(p_y,1)/dy)-ray_pos_y_bound(p_y,1)/dy)>10^(-9)
             i_y=ceil(ray_pos_y_bound(p_y,1)/dy);
         else
             i_y=ceil(ray_pos_y_bound(p_y,1)/dy)+1;
@@ -94,7 +94,7 @@ for az_count=1:N_a/4
             x_new=dx*in_dx;
             y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
 
-            if y_new>dy*in_dy && abs(y_new-dy*in_dy)>10^(-14) 
+            if y_new>dy*in_dy && abs(y_new-dy*in_dy)>10^(-9) 
                 y_new=dy*in_dy;
                 x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
                  
@@ -103,7 +103,7 @@ for az_count=1:N_a/4
                 in_dy=in_dy+1;
                 x_old=x_new;
                 y_old=y_new;
-            elseif abs(y_new-dy*in_dy)<=10^(-14) 
+            elseif abs(y_new-dy*in_dy)<=10^(-9) 
                 
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
                  sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
@@ -128,7 +128,7 @@ for az_count=1:N_a/4
     i_y=1;
 
     for p_x=1:num_x_rays
-        if abs(ceil(ray_pos_x_bound(p_x,1)/dx)-ray_pos_x_bound(p_x,1)/dx)>10^(-14)
+        if abs(ceil(ray_pos_x_bound(p_x,1)/dx)-ray_pos_x_bound(p_x,1)/dx)>10^(-9)
             i_x=ceil(ray_pos_x_bound(p_x,1)/dx);
         else
             i_x=ceil(ray_pos_x_bound(p_x,1)/dx)+1;
@@ -146,7 +146,7 @@ for az_count=1:N_a/4
             x_new=dx*in_dx;
             y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
 
-            if y_new>dy*in_dy && abs(y_new-dy*in_dy)>10^(-14)
+            if y_new>dy*in_dy && abs(y_new-dy*in_dy)>10^(-9)
                 y_new=dy*in_dy;
                 x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
                  
@@ -155,7 +155,7 @@ for az_count=1:N_a/4
                 in_dy=in_dy+1;
                 x_old=x_new;
                 y_old=y_new;
-            elseif abs(y_new-dy*in_dy)<=10^(-14)
+            elseif abs(y_new-dy*in_dy)<=10^(-9)
                 
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
                 sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
@@ -200,7 +200,7 @@ for az_count=N_a/4+1:N_a/2
 
     for p_y=num_y_rays:-1:1
         
-        if abs(ceil(ray_pos_y_bound(p_y,1)/dy)-ray_pos_y_bound(p_y,1)/dy)>10^(-14)
+        if abs(ceil(ray_pos_y_bound(p_y,1)/dy)-ray_pos_y_bound(p_y,1)/dy)>10^(-9)
             i_y=ceil(ray_pos_y_bound(p_y,1)/dy);
         else
             i_y=ceil(ray_pos_y_bound(p_y,1)/dy)+1;
@@ -219,7 +219,7 @@ for az_count=N_a/4+1:N_a/2
             x_new=dx*(in_dx-1);
             y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
 
-            if y_new>dy*in_dy && abs(y_new-dy*in_dy)>10^(-14)
+            if y_new>dy*in_dy && abs(y_new-dy*in_dy)>10^(-9)
                 y_new=dy*in_dy;
                 x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
                  
@@ -228,7 +228,7 @@ for az_count=N_a/4+1:N_a/2
                 in_dy=in_dy+1;
                 x_old=x_new;
                 y_old=y_new;
-            elseif abs(y_new-dy*in_dy)<=10^(-14)
+            elseif abs(y_new-dy*in_dy)<=10^(-9)
                 
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
                 sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
@@ -254,7 +254,7 @@ for az_count=N_a/4+1:N_a/2
     i_y=1;
 
     for p_x=num_x_rays:-1:1
-        if abs(floor(ray_pos_x_bound(p_x,1)/dx)-ray_pos_x_bound(p_x,1)/dx)>10^(-14)
+        if abs(floor(ray_pos_x_bound(p_x,1)/dx)-ray_pos_x_bound(p_x,1)/dx)>10^(-9)
             i_x=ceil(ray_pos_x_bound(p_x,1)/dx);
         else 
             i_x=floor(ray_pos_x_bound(p_x,1)/dx);
@@ -273,7 +273,7 @@ for az_count=N_a/4+1:N_a/2
           
             y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
 
-            if y_new>dy*in_dy && abs(y_new-dy*in_dy)>10^(-14)
+            if y_new>dy*in_dy && abs(y_new-dy*in_dy)>10^(-9)
                 y_new=dy*in_dy;
                 x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
                 
@@ -283,7 +283,7 @@ for az_count=N_a/4+1:N_a/2
                 in_dy=in_dy+1;
                 x_old=x_new;
                 y_old=y_new;
-            elseif abs(y_new-dy*in_dy)<=10^(-14)
+            elseif abs(y_new-dy*in_dy)<=10^(-9)
                 
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
                 sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
@@ -329,7 +329,7 @@ for az_count=3*N_a/4+1:N_a
 
     for p_y=1:num_y_rays
 
-        if abs(floor(ray_pos_y_bound(p_y,1)/dy)-ray_pos_y_bound(p_y,1)/dy)>10^(-14)
+        if abs(floor(ray_pos_y_bound(p_y,1)/dy)-ray_pos_y_bound(p_y,1)/dy)>10^(-9)
             i_y=ceil(ray_pos_y_bound(p_y,1)/dy);
         else 
             i_y=floor(ray_pos_y_bound(p_y,1)/dy);
@@ -346,7 +346,7 @@ for az_count=3*N_a/4+1:N_a
             x_new=dx*in_dx;
             y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
 
-            if y_new<dy*(in_dy-1) && abs(y_new-dy*(in_dy-1))>10^(-14)
+            if y_new<dy*(in_dy-1) && abs(y_new-dy*(in_dy-1))>10^(-9)
                 y_new=dy*(in_dy-1);
                 x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
                  
@@ -356,7 +356,7 @@ for az_count=3*N_a/4+1:N_a
                 in_dy=in_dy-1;
                 x_old=x_new;
                 y_old=y_new;
-            elseif abs(y_new-dy*(in_dy-1))<=10^(-14)
+            elseif abs(y_new-dy*(in_dy-1))<=10^(-9)
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
                 sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
 
@@ -380,7 +380,7 @@ for az_count=3*N_a/4+1:N_a
 
     for p_x=1:num_x_rays
 
-        if abs(ceil(ray_pos_x_bound(p_x,1)/dx)-ray_pos_x_bound(p_x,1)/dx)>10^(-14)
+        if abs(ceil(ray_pos_x_bound(p_x,1)/dx)-ray_pos_x_bound(p_x,1)/dx)>10^(-9)
             i_x=ceil(ray_pos_x_bound(p_x,1)/dx);
         else
             i_x=ceil(ray_pos_x_bound(p_x,1)/dx)+1;
@@ -397,7 +397,7 @@ for az_count=3*N_a/4+1:N_a
             x_new=dx*in_dx;
             y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
 
-            if y_new<dy*(in_dy-1) && abs(y_new-dy*(in_dy-1))>10^(-14)
+            if y_new<dy*(in_dy-1) && abs(y_new-dy*(in_dy-1))>10^(-9)
                 y_new=dy*(in_dy-1);
                 x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
                  
@@ -407,7 +407,7 @@ for az_count=3*N_a/4+1:N_a
                 in_dy=in_dy-1;
                 x_old=x_new;
                 y_old=y_new;
-            elseif abs(y_new-dy*(in_dy-1))<=10^(-14)
+            elseif abs(y_new-dy*(in_dy-1))<=10^(-9)
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
                 sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
 
@@ -450,7 +450,7 @@ for az_count=N_a/2+1:3*N_a/4
     for p_y=1:num_y_rays
         
         
-        if abs(floor(ray_pos_y_bound(p_y,1)/dy)-ray_pos_y_bound(p_y,1)/dy)>10^(-14)
+        if abs(floor(ray_pos_y_bound(p_y,1)/dy)-ray_pos_y_bound(p_y,1)/dy)>10^(-9)
             i_y=ceil(ray_pos_y_bound(p_y,1)/dy);
         else 
             i_y=floor(ray_pos_y_bound(p_y,1)/dy);
@@ -468,7 +468,7 @@ for az_count=N_a/2+1:3*N_a/4
             x_new=dx*(in_dx-1);
             y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
 
-            if y_new<dy*(in_dy-1)&& abs(y_new-dy*(in_dy-1))>10^(-14)
+            if y_new<dy*(in_dy-1)&& abs(y_new-dy*(in_dy-1))>10^(-9)
                 y_new=dy*(in_dy-1);
                 x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
                  
@@ -479,7 +479,7 @@ for az_count=N_a/2+1:3*N_a/4
                 in_dy=in_dy-1;
                 x_old=x_new;
                 y_old=y_new;
-           elseif abs(y_new-dy*(in_dy-1))<=10^(-14)
+           elseif abs(y_new-dy*(in_dy-1))<=10^(-9)
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
                 sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
 
@@ -506,7 +506,7 @@ for az_count=N_a/2+1:3*N_a/4
     for p_x=num_x_rays:-1:1
        
        
-        if abs(floor(ray_pos_x_bound(p_x,1)/dx)-ray_pos_x_bound(p_x,1)/dx)>10^(-14)
+        if abs(floor(ray_pos_x_bound(p_x,1)/dx)-ray_pos_x_bound(p_x,1)/dx)>10^(-9)
             i_x=ceil(ray_pos_x_bound(p_x,1)/dx);
         else 
             i_x=floor(ray_pos_x_bound(p_x,1)/dx);
@@ -525,7 +525,7 @@ for az_count=N_a/2+1:3*N_a/4
           
             y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
 
-            if y_new<dy*(in_dy-1) && abs(y_new-dy*(in_dy-1))>10^(-14)
+            if y_new<dy*(in_dy-1) && abs(y_new-dy*(in_dy-1))>10^(-9)
                 y_new=dy*(in_dy-1);
                 x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
                 
@@ -535,7 +535,7 @@ for az_count=N_a/2+1:3*N_a/4
                 in_dy=in_dy-1;
                 x_old=x_new;
                 y_old=y_new;
-            elseif abs(y_new-dy*(in_dy-1))<=10^(-14)
+            elseif abs(y_new-dy*(in_dy-1))<=10^(-9)
                 length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
                 sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
 
