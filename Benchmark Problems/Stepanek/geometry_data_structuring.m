@@ -31,8 +31,8 @@ nu_sigma_f_5=0;
 X=96;
 Y=86;
 
-dx=0.1;
-dy=0.1;
+dx=1; %dx and dy should divide 18,25, 96,86 in integer
+dy=1;
 
 x=(0:dx:X)';
 y=(0:dy:Y)';
@@ -104,7 +104,7 @@ r_1_x=(x_s_1:dx:x_e_1);
 r_1_y=(y_s_1:dy:y_e_1);
 
 mesh_p_r_1_x=mesh_p_sec_2_x+length(r_1_x)-1;
-mesh_p_r_1_y=mesh_p_sec_1_y+length(r_1_y);
+mesh_p_r_1_y=mesh_p_sec_1_y+length(r_1_y)-1;
 
 %region 2
 
@@ -148,8 +148,59 @@ mesh_p_sec_4_y=length(sec_4_y)-1+mesh_p_sec_1_y;
 
 %% material property in different meshes
 
+%region 5
+
+%section 1
+sigma_t(1:mesh_p_sec_1_y,1:mesh_p_sec_1_x)=sigma_t_5;
+sigma_s(1:mesh_p_sec_1_y,1:mesh_p_sec_1_x)=sigma_s_5;
+nu_sigma_f(1:mesh_p_sec_1_y,1:mesh_p_sec_1_x)=nu_sigma_f_5;
+
+%section 2
+
+sigma_t(mesh_p_sec_1_y+1:mesh_p_sec_2_y,1:mesh_p_sec_2_x)=sigma_t_5;
+sigma_s(mesh_p_sec_1_y+1:mesh_p_sec_2_y,1:mesh_p_sec_2_x)=sigma_s_5;
+nu_sigma_f(mesh_p_sec_1_y+1:mesh_p_sec_2_y,1:mesh_p_sec_2_x)=nu_sigma_f_5;
 
 
+
+%section 3
+
+sigma_t(mesh_p_sec_2_y+1:mesh_p_sec_3_y,1:mesh_p_sec_3_x)=sigma_t_5;
+sigma_s(mesh_p_sec_2_y+1:mesh_p_sec_3_y,1:mesh_p_sec_3_x)=sigma_s_5;
+nu_sigma_f(mesh_p_sec_2_y+1:mesh_p_sec_3_y,1:mesh_p_sec_3_x)=nu_sigma_f_5;
+
+
+
+%section 4
+
+sigma_t(mesh_p_sec_1_y+1:mesh_p_sec_4_y,mesh_p_r_3_x+1:mesh_p_sec_4_x)=sigma_t_5;
+sigma_s(mesh_p_sec_1_y+1:mesh_p_sec_4_y,mesh_p_r_3_x+1:mesh_p_sec_4_x)=sigma_s_5;
+nu_sigma_f(mesh_p_sec_1_y+1:mesh_p_sec_4_y,mesh_p_r_3_x+1:mesh_p_sec_4_x)=nu_sigma_f_5;
+
+% region 1
+
+sigma_t(mesh_p_sec_1_y+1:mesh_p_r_1_y,mesh_p_sec_2_x+1:mesh_p_r_1_x)=sigma_t_1;
+sigma_s(mesh_p_sec_1_y+1:mesh_p_r_1_y,mesh_p_sec_2_x+1:mesh_p_r_1_x)=sigma_s_1;
+nu_sigma_f(mesh_p_sec_1_y+1:mesh_p_r_1_y,mesh_p_sec_2_x+1:mesh_p_r_1_x)=nu_sigma_f_1;
+
+%region 2
+
+sigma_t(mesh_p_sec_1_y+1:mesh_p_r_2_y,mesh_p_r_1_x+1:mesh_p_r_2_x)=sigma_t_2;
+sigma_s(mesh_p_sec_1_y+1:mesh_p_r_2_y,mesh_p_r_1_x+1:mesh_p_r_2_x)=sigma_s_2;
+nu_sigma_f(mesh_p_sec_1_y+1:mesh_p_r_2_y,mesh_p_r_1_x+1:mesh_p_r_2_x)=nu_sigma_f_2;
+
+
+%region 3
+
+sigma_t(mesh_p_r_1_y+1:mesh_p_r_3_y,mesh_p_r_1_x+1:mesh_p_r_3_x)=sigma_t_3;
+sigma_s(mesh_p_r_1_y+1:mesh_p_r_3_y,mesh_p_r_1_x+1:mesh_p_r_3_x)=sigma_s_3;
+nu_sigma_f(mesh_p_r_1_y+1:mesh_p_r_3_y,mesh_p_r_1_x+1:mesh_p_r_3_x)=nu_sigma_f_3;
+
+%region 4
+
+sigma_t(mesh_p_r_1_y+1:mesh_p_r_4_y,mesh_p_sec_2_x+1:mesh_p_r_4_x)=sigma_t_4;
+sigma_s(mesh_p_r_1_y+1:mesh_p_r_4_y,mesh_p_sec_2_x+1:mesh_p_r_4_x)=sigma_s_4;
+nu_sigma_f(mesh_p_r_1_y+1:mesh_p_r_4_y,mesh_p_sec_2_x+1:mesh_p_r_4_x)=nu_sigma_f_4;
 
 
 
