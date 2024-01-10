@@ -1,7 +1,7 @@
 
-function [k_new, flux_new]=power_iteration()
+%function [k_new, flux_new]=power_iteration()
 
-N_a=32;
+N_a=16;
 
 [X,Y,dx,dy,sigma_t,sigma_s,nu_sigma_f]=geometry_data_structuring();
 
