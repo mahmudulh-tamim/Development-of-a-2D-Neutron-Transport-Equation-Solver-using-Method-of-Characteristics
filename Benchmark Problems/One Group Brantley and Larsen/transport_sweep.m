@@ -203,7 +203,7 @@ for az_count=1:N_a/4
                         y_new=dy*in_dy;
                         x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
                         if in_dy==1
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_bound(az_count, pol_count, ray_iden);
+                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=0;
                         else
                             psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
     
@@ -226,7 +226,7 @@ for az_count=1:N_a/4
                         y_old=y_new;
                     elseif abs(y_new-dy*in_dy)<=10^(-14)
                         if in_dy==1
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_bound(az_count, pol_count, ray_iden);
+                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=0;
                         else
                             psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
     
@@ -251,7 +251,7 @@ for az_count=1:N_a/4
                      
                     else
                         if in_dy==1
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_bound(az_count, pol_count, ray_iden);
+                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=0;
                         else
                             psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
     
@@ -330,7 +330,7 @@ for az_count=N_a/4+1:N_a/2
                         y_new=dy*in_dy;
                         x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
                         if in_dx==mesh_center_abscissa_number
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_bound(az_count, pol_count, ray_iden);
+                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=0;
                         else
                             psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
     
@@ -353,7 +353,7 @@ for az_count=N_a/4+1:N_a/2
                         y_old=y_new;
                     elseif abs(y_new-dy*in_dy)<=10^(-14)
                        if in_dx==mesh_center_abscissa_number
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_bound(az_count, pol_count, ray_iden);
+                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=0;
                        else
                                
                             psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
@@ -379,7 +379,7 @@ for az_count=N_a/4+1:N_a/2
 
                     else
                         if in_dx==mesh_center_abscissa_number
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_bound(az_count, pol_count, ray_iden);
+                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=0;
                         else
                             psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
     
@@ -437,7 +437,7 @@ for az_count=N_a/4+1:N_a/2
                         y_new=dy*in_dy;
                         x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
                         if in_dy==1
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_bound(az_count, pol_count, ray_iden);
+                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=0;
                         else
                             psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
     
@@ -460,7 +460,7 @@ for az_count=N_a/4+1:N_a/2
                         y_old=y_new;
                     elseif abs(y_new-dy*in_dy)<=10^(-14)
                         if in_dy==1
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_bound(az_count, pol_count, ray_iden);
+                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=0;
                         else
                             psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
     
@@ -485,7 +485,7 @@ for az_count=N_a/4+1:N_a/2
 
                     else
                         if in_dy==1
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_bound(az_count, pol_count, ray_iden);
+                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=0;
                         else
                             psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
     
@@ -797,7 +797,7 @@ for az_count=N_a/2+1:3*N_a/4
                         y_new=dy*(in_dy-1);
                         x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
                          if in_dx==mesh_center_abscissa_number
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_bound(az_count, pol_count, ray_iden);
+                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=0;
                         else
                             psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
     
@@ -820,7 +820,7 @@ for az_count=N_a/2+1:3*N_a/4
                         y_old=y_new;
                     elseif abs(y_new-dy*(in_dy-1))<=10^(-14)
                         if in_dx==mesh_center_abscissa_number
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_bound(az_count, pol_count, ray_iden);
+                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=0;
                         else
                             psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
     
@@ -845,7 +845,7 @@ for az_count=N_a/2+1:3*N_a/4
 
                     else
                         if in_dx==mesh_center_abscissa_number
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_bound(az_count, pol_count, ray_iden);
+                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=0;
                         else
                             psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
     
