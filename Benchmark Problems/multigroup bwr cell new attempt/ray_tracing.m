@@ -1,7 +1,7 @@
 function [alt_azim_theta,length_of_rays,fin_d,sum_len]=ray_tracing(X,Y,dx,dy,N_a)
 
 
-ray_spacing=0.05;
+ray_spacing=0.01;
 
 
 

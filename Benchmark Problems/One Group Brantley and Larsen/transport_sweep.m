@@ -640,7 +640,7 @@ for az_count=3*N_a/4+1:N_a
                     if(in_dy==0)
                        psi_bound(azimuthal_discretization_number-az_count+1,pol_count,ray_iden-num_y_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
                     elseif in_dx==mesh_center_abscissa_number+1
-                       psi_bound(abs(azimuthal_discretization_number/2-az_count+1),pol_count,ray_iden+num_x_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                       psi_bound(3*azimuthal_discretization_number/2-az_count+1,pol_count,ray_iden+num_x_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
 
                     end
                 end
@@ -742,9 +742,9 @@ for az_count=3*N_a/4+1:N_a
                         y_old=y_new;
                     end
                     if(in_dy==0)
-                       psi_bound(abs(azimuthal_discretization_number-az_count+1),pol_count,ray_iden-num_y_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                       psi_bound(azimuthal_discretization_number-az_count+1,pol_count,ray_iden-num_y_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
                     elseif in_dx==mesh_center_abscissa_number+1
-                       psi_bound(abs(azimuthal_discretization_number/2-az_count+1),pol_count,ray_iden+num_x_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                       psi_bound(3*azimuthal_discretization_number/2-az_count+1,pol_count,ray_iden+num_x_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
 
                     end
 
@@ -871,7 +871,7 @@ for az_count=N_a/2+1:3*N_a/4
                        psi_bound(azimuthal_discretization_number-az_count+1,pol_count,ray_iden-num_y_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
                     elseif in_dx==0
                         
-                       psi_bound(abs(3*azimuthal_discretization_number/2-az_count)+1,pol_count,ray_iden+num_x_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                       psi_bound(3*azimuthal_discretization_number/2-az_count+1,pol_count,ray_iden+num_x_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
 
                     end
                 end
@@ -977,7 +977,7 @@ for az_count=N_a/2+1:3*N_a/4
                     if(in_dy==0)
                        psi_bound(azimuthal_discretization_number-az_count+1,pol_count,ray_iden-num_y_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
                     elseif in_dx==0
-                       psi_bound(abs(3*azimuthal_discretization_number/2-az_count+1),pol_count,ray_iden+num_x_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                       psi_bound(3*azimuthal_discretization_number/2-az_count+1,pol_count,ray_iden+num_x_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
 
                     end
                 end

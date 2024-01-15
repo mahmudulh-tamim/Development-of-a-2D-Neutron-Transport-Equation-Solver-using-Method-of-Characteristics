@@ -13,8 +13,8 @@ nu_sigma_f=0.39;
 X=4;
 Y=4;
 
-dx=0.05;
-dy=0.05;
+dx=0.1;
+dy=0.1;
 
 x=(0:dx:X)';
 y=(0:dy:Y)';
@@ -33,12 +33,12 @@ source_term=(fission_term+scattering_term)/(4*pi);
 flux_new=transport_sweep(source_term,exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d);
 
 iteration=1;
-%{
+
 while max(max(abs(flux_new-flux_old)))>tol
     flux_old=flux_new;
     scattering_term=sigma_s*flux_old;
 
-    source_term=(fission_term+scattering_term);
+    source_term=(fission_term+scattering_term)/(4*pi);
 
     flux_new=transport_sweep(source_term,exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d);
 
@@ -46,4 +46,3 @@ while max(max(abs(flux_new-flux_old)))>tol
 end
 
 iteration
-%}

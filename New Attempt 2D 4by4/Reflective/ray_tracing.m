@@ -1,7 +1,7 @@
 function [alt_azim_theta,length_of_rays,fin_d,sum_len]=ray_tracing(X,Y,dx,dy,N_a)
 
 
-ray_spacing=0.05;
+ray_spacing=0.01;
 
 
 
@@ -30,7 +30,7 @@ init_d=zeros(azimuthal_discretization_number,1);
 fin_d=zeros(azimuthal_discretization_number,1);
 init_d(:,1)=ray_spacing;
 
-length_of_rays=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,100);
+length_of_rays=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,500);
 sum_len=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number);
 
 ray_index_count=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number);

@@ -37,8 +37,8 @@ nu_sigma_f_m_2=0;
 X=8.9;
 Y=8.9;
 
-dx=0.05; %dx and dy should divide 18,25, 96,86 in integer
-dy=0.05;
+dx=0.1; %dx and dy should divide 18,25, 96,86 in integer
+dy=0.1;
 
 x=(0:dx:X)';
 y=(0:dy:Y)';

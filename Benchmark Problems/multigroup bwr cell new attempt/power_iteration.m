@@ -14,7 +14,7 @@ mesh_center_y=(dy/2:dy:Y)';
 
 
 %given data
-tol=10^(-10);
+tol=10^(-7);
 
 
 
@@ -56,22 +56,24 @@ while abs((k_new-k_old))>tol
 
     k_new=k_old*new_q_f/old_q_f;
 
+    
+
     iteration_power=iteration_power+1;
 end
 
 figure(1)
-%[mesh_x, mesh_y]=meshgrid(mesh_center_abscissa_number,mesh_center_ordinate_number);
+
 mesh_x=mesh_center_x;
 mesh_y=mesh_center_y;
 mesh(mesh_y,mesh_x,flux_new(:,:,1));
 
 xlabel("X ordinate");
-ylabel("Y ordinate");
+ylabel("Y ordinate"); 
 zlabel("Flux");
 title("Fast Flux");
 
 figure(2)
-%[mesh_x, mesh_y]=meshgrid(mesh_center_abscissa_number,mesh_center_ordinate_number);
+
 mesh(mesh_y,mesh_x,flux_new(:,:,2));
 
 xlabel("X ordinate");

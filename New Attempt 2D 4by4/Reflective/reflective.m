@@ -1,6 +1,5 @@
 function scaler_flux=reflective(S,exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d,X,Y,dx,dy,N_a,sigma_t,total_rays)
-
-tol=10^(-10);
+tol=10^(-16);
 
 mesh_center_x=(dx/2:dx:X)';
 mesh_center_y=(dy/2:dy:Y)';
@@ -41,13 +40,14 @@ size_s_len=size(s_len);
 psi_avg_old=zeros(size_s_len);
 
 uuf=max(max(total_rays));
-psi_bound=zeros(azimuthal_discretization_number,polar_discretization_number,uuf);
+psi_bound_old=zeros(azimuthal_discretization_number,polar_discretization_number,uuf);
 
-[psi_avg, psi_bound]=transport_sweep(S,exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d,X,Y,dx,dy,N_a,sigma_t,psi_bound);
+[psi_avg, psi_bound]=transport_sweep(S,exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d,X,Y,dx,dy,N_a,sigma_t,psi_bound_old);
 it=1;
-while max(max(max(max(abs(psi_avg-psi_avg_old)))))>tol
+while max(max(max(psi_bound-psi_bound_old)))>tol%max(max(max(max(abs(psi_avg-psi_avg_old)))))>tol
     psi_avg_old=psi_avg;
-    [psi_avg, psi_bound]=transport_sweep(S,exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d,X,Y,dx,dy,N_a,sigma_t,psi_bound);
+    psi_bound_old=psi_bound;
+    [psi_avg, psi_bound]=transport_sweep(S,exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d,X,Y,dx,dy,N_a,sigma_t,psi_bound_old);
     it=it+1;
 end
 scaler_flux=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number);
@@ -61,3 +61,4 @@ for j=1:mesh_center_ordinate_number
         end
     end
 end
+
