@@ -1,20 +1,13 @@
 
 %function [k_new, flux_new]=power_iteration()
 
-N_a=40;
+N_a=16;
 tot_g=2;
 
 [X,Y,dx,dy,sigma_t,sigma_s,nu_sigma_f,chi]=geometry_data_structuring();
 
 
-[exponential_portion1,s_len,sum_s_len,alt_azim_theta,fin_d, mesh_center_ordinate_number,mesh_center_abscissa_number,total_rays]=ray_tracing_polar_included(X,Y,dx,dy,N_a,sigma_t(:,:,1));
-[exponential_portion2,s_len,sum_s_len,alt_azim_theta,fin_d, mesh_center_ordinate_number,mesh_center_abscissa_number,total_rays]=ray_tracing_polar_included(X,Y,dx,dy,N_a,sigma_t(:,:,2));
-
-jkaj=size(exponential_portion1);
-size_exponential_portion=vertcat(jkaj',2);
-exponential_portion=zeros(size_exponential_portion');
-exponential_portion(:,:,:,:,:,1)=exponential_portion1;
-exponential_portion(:,:,:,:,:,2)=exponential_portion2;
+[exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d, mesh_center_ordinate_number,mesh_center_abscissa_number,total_rays]=ray_tracing_polar_included(X,Y,dx,dy,N_a,sigma_t(:,:,1));
 
 
 mesh_center_x=(dx/2:dx:X)';
