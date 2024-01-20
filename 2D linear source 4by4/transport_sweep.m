@@ -1,4 +1,4 @@
-function [avg_psi, psi_bound]=transport_sweep(S,exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d,X,Y,dx,dy,N_a,sigma_t,psi_bound)
+function [scaler_flux,x_moment_scaler_flux,y_moment_scaler_flux]=transport_sweep(q_i_x,q_i_y,q_bar_i,c_i_xx,c_i_yy,c_i_xy,F_1,F_2,H,adj_len,s_len,ksi,alt_azim_theta,fin_d,x_c_t,y_c_t,X_i_c,Y_i_c,X,Y,dx,dy,N_a,sigma_t,psi_bound)
 
 tol=10^(-7);
 
@@ -37,17 +37,21 @@ weight_azimuthal(2:end-1,1)=0.5*(alt_azim_theta(3:end,1)-alt_azim_theta(1:end-2,
 weight_azimuthal(1,1)=0.5*(alt_azim_theta(1,1)+alt_azim_theta(2,1));
 weight_azimuthal(end,1)=0.5*(2*pi-alt_azim_theta(end-1,1)+alt_azim_theta(1,1));
 
-ray_index_count=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,polar_discretization_number);
+ray_index_count=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number);
 total_rays=zeros(azimuthal_discretization_number,polar_discretization_number);
 
-psi_in=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,polar_discretization_number,100);
-psi_out=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,polar_discretization_number,100);
-del_psi=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,polar_discretization_number,100);
-avg_psi=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,polar_discretization_number);
-
-scaler_flux=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number);
+psi_in=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number,500);
+psi_out=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number,500);
+del_psi=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number,500);
 
 
+scaler_flux=q_bar_i./sigma_t;
+x_moment_scaler_flux=(q_i_x/sigma_t.*c_i_xx+q_i_y/sigma_t.*c_i_xy);
+y_moment_scaler_flux=(q_i_y/sigma_t.*c_i_yy+q_i_x/sigma_t.*c_i_xy);
+
+size_s_len=size(s_len);
+q_bar_azimtrack=zeros(size_s_len);
+q_cap_track=zeros(size_s_len);
 
 %% bottom to top rays
 
@@ -87,19 +91,39 @@ for az_count=1:N_a/4
         
                 while in_dx<=mesh_center_abscissa_number && in_dy<=mesh_center_ordinate_number
                     
-                    ray_index_count(in_dy,in_dx,az_count,pol_count)=ray_index_count(in_dy,in_dx,az_count,pol_count)+1;
-
+                    ray_index_count(in_dx,in_dy,az_count,pol_count)=ray_index_count(in_dx,in_dy,az_count,pol_count)+1;
+                    t=ray_index_count(in_dx,in_dy,az_count,pol_count);
 
                     if in_dx==1
-                          psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_bound(az_count, pol_count, ray_iden);
+                          psi_in(in_dx,in_dy,az_count,pol_count,ray_index_count(in_dx,in_dy,az_count,pol_count))=0*psi_bound(az_count, pol_count, ray_iden);
                     else
-                          psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                          psi_in(in_dx,in_dy,az_count,pol_count,ray_index_count(in_dx,in_dy,az_count,pol_count))=psi_out(in_dx_old,in_dy_old,az_count,pol_count,ray_index_count(in_dx_old,in_dy_old,az_count,pol_count));
     
                     end
-                    del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=(psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-S(in_dy,in_dx)/sigma_t)*exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-                    psi_out(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-                    avg_psi(in_dy,in_dx,az_count,pol_count)=avg_psi(in_dy,in_dx,az_count,pol_count)+del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count))+S(in_dy,in_dx)*s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count));
-                    scaler_flux(in_dy,in_dx)=scaler_flux(in_dy,in_dx)+(del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count))+S(in_dy,in_dx)*s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count)))*weight_azimuthal(az_count,1)*w(pol_count,1);
+                    cosphia=cos(alt_azim_theta(az_count,1));
+                    sinphia=sin(alt_azim_theta(az_count,1));
+
+                    q_bar_azimtrack(in_dx,in_dy,az_count,pol_count,t)=(1/(4*pi))*(q_bar_i(in_dx,in_dy)+(x_c_t(in_dx,in_dy,az_count,t)-X_i_c(in_dx,in_dy))*q_i_x(in_dx,in_dy)+(y_c_t(in_dx,in_dy,az_count,t)-Y_i_c(in_dx,in_dy))*q_i_y(in_dx,in_dy));
+                    q_cap_track(in_dx,in_dy,az_count,pol_count,t)=(1/(4*pi))*(cosphia*mu(pol_count,1)*q_i_x(in_dx,in_dy)+sinphia*mu(pol_count,1)*q_i_y(in_dx,in_dy))/ksi(in_dx,in_dy,az_count);
+
+                    temp_psi_in=psi_in(in_dx,in_dy,az_count,pol_count,t);
+                    track_mid_q=q_bar_azimtrack(in_dx,in_dy,az_count,pol_count,t);
+                    temp_F_1=F_1(in_dx,in_dy,az_count,pol_count,t);
+                    temp_F_2=F_2(in_dx,in_dy,az_count,pol_count,t);
+                    temp_q_cap_track=q_cap_track(in_dx,in_dy,az_count,pol_count,t);
+
+
+                    psi_out(in_dx,in_dy,az_count,pol_count,t)=temp_psi_in+(track_mid_q/sigma_t-temp_psi_in)*temp_F_1+temp_q_cap_track/(2*(sigma_t)^2)*temp_F_2;
+                    temp_psi_out=psi_out(in_dx,in_dy,az_count,pol_count,t);
+                    del_psi(in_dx,in_dy,az_count,pol_count,t)=temp_psi_in-temp_psi_out;
+                    temp_del_psi=del_psi(in_dx,in_dy,az_count,pol_count,t);
+                    
+                    scaler_flux(in_dx,in_dy)=scaler_flux(in_dx,in_dy)+1/(dx*dy*sigma_t)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*mu(pol_count,1)*w(pol_count,1)*temp_del_psi;
+                    
+                    temp_adj_len=adj_len(in_dx,in_dy,az_count,t);
+                    temp_H=H(in_dx,in_dy,az_count,pol_count,t);
+                    x_moment_scaler_flux(in_dx,in_dy)=x_moment_scaler_flux(in_dx,in_dy)+1/(sigma_t*dx*dy)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*mu(pol_count,1)*w(pol_count,1)*(cosphia*temp_adj_len/ksi(in_dx,in_dy,az_count)*temp_psi_in*temp_H+x_old*temp_del_psi);
+                    y_moment_scaler_flux(in_dx,in_dy)=y_moment_scaler_flux(in_dx,in_dy)+1/(sigma_t*dx*dy)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*mu(pol_count,1)*w(pol_count,1)*(sinphia*temp_adj_len/ksi(in_dx,in_dy,az_count)*temp_psi_in*temp_H+y_old*temp_del_psi);
 
                     
                     x_new=dx*in_dx;
@@ -140,10 +164,10 @@ for az_count=1:N_a/4
 
                     if(in_dy==mesh_center_ordinate_number+1)
                         
-                       psi_bound(azimuthal_discretization_number-az_count+1,pol_count,ray_iden-num_y_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                       psi_bound(azimuthal_discretization_number-az_count+1,pol_count,ray_iden-num_y_rays)=psi_out(in_dx_old,in_dy_old,az_count,pol_count,ray_index_count(in_dx_old,in_dy_old,az_count,pol_count));
                     elseif in_dx==mesh_center_abscissa_number+1
                         
-                       psi_bound(azimuthal_discretization_number/2-az_count+1,pol_count,ray_iden+num_x_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                       psi_bound(azimuthal_discretization_number/2-az_count+1,pol_count,ray_iden+num_x_rays)=psi_out(in_dx_old,in_dy_old,az_count,pol_count,ray_index_count(in_dx_old,in_dy_old,az_count,pol_count));
 
                     end
                 end
@@ -167,22 +191,39 @@ for az_count=1:N_a/4
                 y_old=0;
         
                 while in_dx<=mesh_center_abscissa_number && in_dy<=mesh_center_ordinate_number
-                    ray_index_count(in_dy,in_dx,az_count,pol_count)=ray_index_count(in_dy,in_dx,az_count,pol_count)+1;
+                     ray_index_count(in_dx,in_dy,az_count,pol_count)=ray_index_count(in_dx,in_dy,az_count,pol_count)+1;
+                     t=ray_index_count(in_dx,in_dy,az_count,pol_count);
                     if in_dy==1
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_bound(az_count, pol_count, ray_iden);
+                            psi_in(in_dx,in_dy,az_count,pol_count,ray_index_count(in_dx,in_dy,az_count,pol_count))=0*psi_bound(az_count, pol_count, ray_iden);
                     else
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                            psi_in(in_dx,in_dy,az_count,pol_count,ray_index_count(in_dx,in_dy,az_count,pol_count))=psi_out(in_dx_old,in_dy_old,az_count,pol_count,ray_index_count(in_dx_old,in_dy_old,az_count,pol_count));
     
                     end
-    
-                    del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=(psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-S(in_dy,in_dx)/sigma_t)*exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-                    psi_out(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-    
-                   avg_psi(in_dy,in_dx,az_count,pol_count)=avg_psi(in_dy,in_dx,az_count,pol_count)+del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count))+S(in_dy,in_dx)*s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count));
+                    
+                    cosphia=cos(alt_azim_theta(az_count,1));
+                    sinphia=sin(alt_azim_theta(az_count,1));
+                    q_bar_azimtrack(in_dx,in_dy,az_count,pol_count,t)=(1/(4*pi))*(q_bar_i(in_dx,in_dy)+(x_c_t(in_dx,in_dy,az_count,t)-X_i_c(in_dx,in_dy))*q_i_x(in_dx,in_dy)+(y_c_t(in_dx,in_dy,az_count,t)-Y_i_c(in_dx,in_dy))*q_i_y(in_dx,in_dy));
+                    q_cap_track(in_dx,in_dy,az_count,pol_count,t)=(1/(4*pi))*(cosphia*mu(pol_count,1)*q_i_x(in_dx,in_dy)+sinphia*mu(pol_count,1)*q_i_y(in_dx,in_dy))/ksi(in_dx,in_dy,az_count);
 
-    
-                   scaler_flux(in_dy,in_dx)=scaler_flux(in_dy,in_dx)+(del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count))+S(in_dy,in_dx)*s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count)))*weight_azimuthal(az_count,1)*w(pol_count,1);
-                        
+                    temp_psi_in=psi_in(in_dx,in_dy,az_count,pol_count,t);
+                    track_mid_q=q_bar_azimtrack(in_dx,in_dy,az_count,pol_count,t);
+                    temp_F_1=F_1(in_dx,in_dy,az_count,pol_count,t);
+                    temp_F_2=F_2(in_dx,in_dy,az_count,pol_count,t);
+                    temp_q_cap_track=q_cap_track(in_dx,in_dy,az_count,pol_count,t);
+
+
+                    psi_out(in_dx,in_dy,az_count,pol_count,t)=temp_psi_in+(track_mid_q/sigma_t-temp_psi_in)*temp_F_1+temp_q_cap_track/(2*(sigma_t)^2)*temp_F_2;
+                    temp_psi_out=psi_out(in_dx,in_dy,az_count,pol_count,t);
+                    del_psi(in_dx,in_dy,az_count,pol_count,t)=temp_psi_in-temp_psi_out;
+                    temp_del_psi=del_psi(in_dx,in_dy,az_count,pol_count,t);
+                    
+                    scaler_flux(in_dx,in_dy)=scaler_flux(in_dx,in_dy)+1/(dx*dy*sigma_t)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*mu(pol_count,1)*w(pol_count,1)*temp_del_psi;
+                    
+                    temp_adj_len=adj_len(in_dx,in_dy,az_count,t);
+                    temp_H=H(in_dx,in_dy,az_count,pol_count,t);
+                    x_moment_scaler_flux(in_dx,in_dy)=x_moment_scaler_flux(in_dx,in_dy)+1/(sigma_t*dx*dy)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*mu(pol_count,1)*w(pol_count,1)*(cosphia*temp_adj_len/ksi(in_dx,in_dy,az_count)*temp_psi_in*temp_H+x_old*temp_del_psi);
+                    y_moment_scaler_flux(in_dx,in_dy)=y_moment_scaler_flux(in_dx,in_dy)+1/(sigma_t*dx*dy)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*mu(pol_count,1)*w(pol_count,1)*(sinphia*temp_adj_len/ksi(in_dx,in_dy,az_count)*temp_psi_in*temp_H+y_old*temp_del_psi);
+
                     x_new=dx*in_dx;
                     y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
         
@@ -219,10 +260,10 @@ for az_count=1:N_a/4
                     end
                     if(in_dy==mesh_center_ordinate_number+1)
                        
-                       psi_bound(azimuthal_discretization_number-az_count+1,pol_count,ray_iden-num_y_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                       psi_bound(azimuthal_discretization_number-az_count+1,pol_count,ray_iden-num_y_rays)=psi_out(in_dx_old,in_dy_old,az_count,pol_count,ray_index_count(in_dx_old,in_dy_old,az_count,pol_count));
                     elseif in_dx==mesh_center_abscissa_number+1
                        
-                       psi_bound(azimuthal_discretization_number/2-az_count+1,pol_count,ray_iden+num_x_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                       psi_bound(azimuthal_discretization_number/2-az_count+1,pol_count,ray_iden+num_x_rays)=psi_out(in_dx_old,in_dy_old,az_count,pol_count,ray_index_count(in_dx_old,in_dy_old,az_count,pol_count));
 
                     end
                 end
@@ -268,23 +309,40 @@ for az_count=N_a/4+1:N_a/2
                 y_old=ray_pos_y_bound(p_y,1);
         
                 while in_dx>=1 && in_dy<=mesh_center_ordinate_number
-                     ray_index_count(in_dy,in_dx,az_count,pol_count)=ray_index_count(in_dy,in_dx,az_count,pol_count)+1;
+                      ray_index_count(in_dx,in_dy,az_count,pol_count)=ray_index_count(in_dx,in_dy,az_count,pol_count)+1;
+                      t=ray_index_count(in_dx,in_dy,az_count,pol_count);
                         if in_dx==mesh_center_abscissa_number
                              
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_bound(az_count, pol_count, ray_iden);
+                            psi_in(in_dx,in_dy,az_count,pol_count,ray_index_count(in_dx,in_dy,az_count,pol_count))=0*psi_bound(az_count, pol_count, ray_iden);
                         else
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                            psi_in(in_dx,in_dy,az_count,pol_count,ray_index_count(in_dx,in_dy,az_count,pol_count))=psi_out(in_dx_old,in_dy_old,az_count,pol_count,ray_index_count(in_dx_old,in_dy_old,az_count,pol_count));
     
                         end
     
-                        del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=(psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-S(in_dy,in_dx)/sigma_t)*exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-                        psi_out(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-    
-                        avg_psi(in_dy,in_dx,az_count,pol_count)=avg_psi(in_dy,in_dx,az_count,pol_count)+del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count))+S(in_dy,in_dx)*s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count));
+                    cosphia=cos(alt_azim_theta(az_count,1));
+                    sinphia=sin(alt_azim_theta(az_count,1));    
+                    q_bar_azimtrack(in_dx,in_dy,az_count,pol_count,t)=(1/(4*pi))*(q_bar_i(in_dx,in_dy)+(x_c_t(in_dx,in_dy,az_count,t)-X_i_c(in_dx,in_dy))*q_i_x(in_dx,in_dy)+(y_c_t(in_dx,in_dy,az_count,t)-Y_i_c(in_dx,in_dy))*q_i_y(in_dx,in_dy));
+                    q_cap_track(in_dx,in_dy,az_count,pol_count,t)=(1/(4*pi))*(cosphia*mu(pol_count,1)*q_i_x(in_dx,in_dy)+sinphia*mu(pol_count,1)*q_i_y(in_dx,in_dy))/ksi(in_dx,in_dy,az_count);
 
-    
-                        scaler_flux(in_dy,in_dx)=scaler_flux(in_dy,in_dx)+(del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count))+S(in_dy,in_dx)*s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count)))*weight_azimuthal(az_count,1)*w(pol_count,1);
-                        
+                    temp_psi_in=psi_in(in_dx,in_dy,az_count,pol_count,t);
+                    track_mid_q=q_bar_azimtrack(in_dx,in_dy,az_count,pol_count,t);
+                    temp_F_1=F_1(in_dx,in_dy,az_count,pol_count,t);
+                    temp_F_2=F_2(in_dx,in_dy,az_count,pol_count,t);
+                    temp_q_cap_track=q_cap_track(in_dx,in_dy,az_count,pol_count,t);
+
+
+                    psi_out(in_dx,in_dy,az_count,pol_count,t)=temp_psi_in+(track_mid_q/sigma_t-temp_psi_in)*temp_F_1+temp_q_cap_track/(2*(sigma_t)^2)*temp_F_2;
+                    temp_psi_out=psi_out(in_dx,in_dy,az_count,pol_count,t);
+                    del_psi(in_dx,in_dy,az_count,pol_count,t)=temp_psi_in-temp_psi_out;
+                    temp_del_psi=del_psi(in_dx,in_dy,az_count,pol_count,t);
+                    
+                    scaler_flux(in_dx,in_dy)=scaler_flux(in_dx,in_dy)+1/(dx*dy*sigma_t)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*mu(pol_count,1)*w(pol_count,1)*temp_del_psi;
+                    
+                    temp_adj_len=adj_len(in_dx,in_dy,az_count,t);
+                    temp_H=H(in_dx,in_dy,az_count,pol_count,t);
+                    x_moment_scaler_flux(in_dx,in_dy)=x_moment_scaler_flux(in_dx,in_dy)+1/(sigma_t*dx*dy)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*mu(pol_count,1)*w(pol_count,1)*(cosphia*temp_adj_len/ksi(in_dx,in_dy,az_count)*temp_psi_in*temp_H+x_old*temp_del_psi);
+                    y_moment_scaler_flux(in_dx,in_dy)=y_moment_scaler_flux(in_dx,in_dy)+1/(sigma_t*dx*dy)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*mu(pol_count,1)*w(pol_count,1)*(sinphia*temp_adj_len/ksi(in_dx,in_dy,az_count)*temp_psi_in*temp_H+y_old*temp_del_psi);
+
                     x_new=dx*(in_dx-1);
                     y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
         
@@ -321,11 +379,11 @@ for az_count=N_a/4+1:N_a/2
                         y_old=y_new;
                    end
                    if(in_dy==mesh_center_ordinate_number+1)
-                       psi_bound(azimuthal_discretization_number-az_count+1,pol_count,ray_iden-num_y_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                       psi_bound(azimuthal_discretization_number-az_count+1,pol_count,ray_iden-num_y_rays)=psi_out(in_dx_old,in_dy_old,az_count,pol_count,ray_index_count(in_dx_old,in_dy_old,az_count,pol_count));
                      
                    elseif in_dx==0
                         
-                       psi_bound(azimuthal_discretization_number/2-az_count+1,pol_count,ray_iden+num_x_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                       psi_bound(azimuthal_discretization_number/2-az_count+1,pol_count,ray_iden+num_x_rays)=psi_out(in_dx_old,in_dy_old,az_count,pol_count,ray_index_count(in_dx_old,in_dy_old,az_count,pol_count));
                        
                     end
                 end
@@ -349,22 +407,39 @@ for az_count=N_a/4+1:N_a/2
                 y_old=0;
         
                 while in_dx>=1 && in_dy<=mesh_center_ordinate_number
-                    ray_index_count(in_dy,in_dx,az_count,pol_count)=ray_index_count(in_dy,in_dx,az_count,pol_count)+1;
+                     ray_index_count(in_dx,in_dy,az_count,pol_count)=ray_index_count(in_dx,in_dy,az_count,pol_count)+1;
+                     t=ray_index_count(in_dx,in_dy,az_count,pol_count);
                         if in_dy==1
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_bound(az_count, pol_count, ray_iden);
+                            psi_in(in_dx,in_dy,az_count,pol_count,ray_index_count(in_dx,in_dy,az_count,pol_count))=0*psi_bound(az_count, pol_count, ray_iden);
                         else
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                            psi_in(in_dx,in_dy,az_count,pol_count,ray_index_count(in_dx,in_dy,az_count,pol_count))=psi_out(in_dx_old,in_dy_old,az_count,pol_count,ray_index_count(in_dx_old,in_dy_old,az_count,pol_count));
     
                         end
     
-                        del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=(psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-S(in_dy,in_dx)/sigma_t)*exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-                        psi_out(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-    
-                        avg_psi(in_dy,in_dx,az_count,pol_count)=avg_psi(in_dy,in_dx,az_count,pol_count)+del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count))+S(in_dy,in_dx)*s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count));
+                    cosphia=cos(alt_azim_theta(az_count,1));
+                    sinphia=sin(alt_azim_theta(az_count,1));
+                    q_bar_azimtrack(in_dx,in_dy,az_count,pol_count,t)=(1/(4*pi))*(q_bar_i(in_dx,in_dy)+(x_c_t(in_dx,in_dy,az_count,t)-X_i_c(in_dx,in_dy))*q_i_x(in_dx,in_dy)+(y_c_t(in_dx,in_dy,az_count,t)-Y_i_c(in_dx,in_dy))*q_i_y(in_dx,in_dy));
+                    q_cap_track(in_dx,in_dy,az_count,pol_count,t)=(1/(4*pi))*(cosphia*mu(pol_count,1)*q_i_x(in_dx,in_dy)+sinphia*mu(pol_count,1)*q_i_y(in_dx,in_dy))/ksi(in_dx,in_dy,az_count);
 
-    
-                        scaler_flux(in_dy,in_dx)=scaler_flux(in_dy,in_dx)+(del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count))+S(in_dy,in_dx)*s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count)))*weight_azimuthal(az_count,1)*w(pol_count,1);
-                        
+                    temp_psi_in=psi_in(in_dx,in_dy,az_count,pol_count,t);
+                    track_mid_q=q_bar_azimtrack(in_dx,in_dy,az_count,pol_count,t);
+                    temp_F_1=F_1(in_dx,in_dy,az_count,pol_count,t);
+                    temp_F_2=F_2(in_dx,in_dy,az_count,pol_count,t);
+                    temp_q_cap_track=q_cap_track(in_dx,in_dy,az_count,pol_count,t);
+
+
+                    psi_out(in_dx,in_dy,az_count,pol_count,t)=temp_psi_in+(track_mid_q/sigma_t-temp_psi_in)*temp_F_1+temp_q_cap_track/(2*(sigma_t)^2)*temp_F_2;
+                    temp_psi_out=psi_out(in_dx,in_dy,az_count,pol_count,t);
+                    del_psi(in_dx,in_dy,az_count,pol_count,t)=temp_psi_in-temp_psi_out;
+                    temp_del_psi=del_psi(in_dx,in_dy,az_count,pol_count,t);
+                    
+                    scaler_flux(in_dx,in_dy)=scaler_flux(in_dx,in_dy)+1/(dx*dy*sigma_t)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*mu(pol_count,1)*w(pol_count,1)*temp_del_psi;
+                    
+                    temp_adj_len=adj_len(in_dx,in_dy,az_count,t);
+                    temp_H=H(in_dx,in_dy,az_count,pol_count,t);
+                    x_moment_scaler_flux(in_dx,in_dy)=x_moment_scaler_flux(in_dx,in_dy)+1/(sigma_t*dx*dy)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*mu(pol_count,1)*w(pol_count,1)*(cosphia*temp_adj_len/ksi(in_dx,in_dy,az_count)*temp_psi_in*temp_H+x_old*temp_del_psi);
+                    y_moment_scaler_flux(in_dx,in_dy)=y_moment_scaler_flux(in_dx,in_dy)+1/(sigma_t*dx*dy)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*mu(pol_count,1)*w(pol_count,1)*(sinphia*temp_adj_len/ksi(in_dx,in_dy,az_count)*temp_psi_in*temp_H+y_old*temp_del_psi);
+
 
                     x_new=dx*(in_dx-1);
                   
@@ -404,10 +479,10 @@ for az_count=N_a/4+1:N_a/2
                     end
                     if(in_dy==mesh_center_ordinate_number+1)
                          
-                       psi_bound(azimuthal_discretization_number-az_count+1,pol_count,ray_iden-num_y_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                       psi_bound(azimuthal_discretization_number-az_count+1,pol_count,ray_iden-num_y_rays)=psi_out(in_dx_old,in_dy_old,az_count,pol_count,ray_index_count(in_dx_old,in_dy_old,az_count,pol_count));
                     elseif in_dx==0
                         
-                       psi_bound(azimuthal_discretization_number/2-az_count+1,pol_count,ray_iden+num_x_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                       psi_bound(azimuthal_discretization_number/2-az_count+1,pol_count,ray_iden+num_x_rays)=psi_out(in_dx_old,in_dy_old,az_count,pol_count,ray_index_count(in_dx_old,in_dy_old,az_count,pol_count));
 
                     end
                 end
@@ -456,22 +531,40 @@ for az_count=3*N_a/4+1:N_a
                 y_old=ray_pos_y_bound(p_y,1);
         
                 while in_dx<=mesh_center_abscissa_number && in_dy>=1
-                    ray_index_count(in_dy,in_dx,az_count,pol_count)=ray_index_count(in_dy,in_dx,az_count,pol_count)+1;
+                     ray_index_count(in_dx,in_dy,az_count,pol_count)=ray_index_count(in_dx,in_dy,az_count,pol_count)+1;
+                     t=ray_index_count(in_dx,in_dy,az_count,pol_count);
                         if in_dx==1
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_bound(az_count, pol_count, ray_iden);
+                            psi_in(in_dx,in_dy,az_count,pol_count,ray_index_count(in_dx,in_dy,az_count,pol_count))=0*psi_bound(az_count, pol_count, ray_iden);
                         else
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                            psi_in(in_dx,in_dy,az_count,pol_count,ray_index_count(in_dx,in_dy,az_count,pol_count))=psi_out(in_dx_old,in_dy_old,az_count,pol_count,ray_index_count(in_dx_old,in_dy_old,az_count,pol_count));
     
                         end
     
-                        del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=(psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-S(in_dy,in_dx)/sigma_t)*exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-                        psi_out(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-    
-                        avg_psi(in_dy,in_dx,az_count,pol_count)=avg_psi(in_dy,in_dx,az_count,pol_count)+del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count))+S(in_dy,in_dx)*s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count));
+                    cosphia=cos(alt_azim_theta(az_count,1));
+                    sinphia=sin(alt_azim_theta(az_count,1));
 
-    
-                        scaler_flux(in_dy,in_dx)=scaler_flux(in_dy,in_dx)+(del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count))+S(in_dy,in_dx)*s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count)))*weight_azimuthal(az_count,1)*w(pol_count,1);
-                        
+                    q_bar_azimtrack(in_dx,in_dy,az_count,pol_count,t)=(1/(4*pi))*(q_bar_i(in_dx,in_dy)+(x_c_t(in_dx,in_dy,az_count,t)-X_i_c(in_dx,in_dy))*q_i_x(in_dx,in_dy)+(y_c_t(in_dx,in_dy,az_count,t)-Y_i_c(in_dx,in_dy))*q_i_y(in_dx,in_dy));
+                    q_cap_track(in_dx,in_dy,az_count,pol_count,t)=(1/(4*pi))*(cosphia*mu(pol_count,1)*q_i_x(in_dx,in_dy)+sinphia*mu(pol_count,1)*q_i_y(in_dx,in_dy))/ksi(in_dx,in_dy,az_count);
+
+                    temp_psi_in=psi_in(in_dx,in_dy,az_count,pol_count,t);
+                    track_mid_q=q_bar_azimtrack(in_dx,in_dy,az_count,pol_count,t);
+                    temp_F_1=F_1(in_dx,in_dy,az_count,pol_count,t);
+                    temp_F_2=F_2(in_dx,in_dy,az_count,pol_count,t);
+                    temp_q_cap_track=q_cap_track(in_dx,in_dy,az_count,pol_count,t);
+
+
+                    psi_out(in_dx,in_dy,az_count,pol_count,t)=temp_psi_in+(track_mid_q/sigma_t-temp_psi_in)*temp_F_1+temp_q_cap_track/(2*(sigma_t)^2)*temp_F_2;
+                    temp_psi_out=psi_out(in_dx,in_dy,az_count,pol_count,t);
+                    del_psi(in_dx,in_dy,az_count,pol_count,t)=temp_psi_in-temp_psi_out;
+                    temp_del_psi=del_psi(in_dx,in_dy,az_count,pol_count,t);
+                    
+                    scaler_flux(in_dx,in_dy)=scaler_flux(in_dx,in_dy)+1/(dx*dy*sigma_t)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*mu(pol_count,1)*w(pol_count,1)*temp_del_psi;
+                    
+                    temp_adj_len=adj_len(in_dx,in_dy,az_count,t);
+                    temp_H=H(in_dx,in_dy,az_count,pol_count,t);
+                    x_moment_scaler_flux(in_dx,in_dy)=x_moment_scaler_flux(in_dx,in_dy)+1/(sigma_t*dx*dy)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*mu(pol_count,1)*w(pol_count,1)*(cosphia*temp_adj_len/ksi(in_dx,in_dy,az_count)*temp_psi_in*temp_H+x_old*temp_del_psi);
+                    y_moment_scaler_flux(in_dx,in_dy)=y_moment_scaler_flux(in_dx,in_dy)+1/(sigma_t*dx*dy)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*mu(pol_count,1)*w(pol_count,1)*(sinphia*temp_adj_len/ksi(in_dx,in_dy,az_count)*temp_psi_in*temp_H+y_old*temp_del_psi);
+
                     x_new=dx*in_dx;
                     y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
         
@@ -508,9 +601,9 @@ for az_count=3*N_a/4+1:N_a
                         y_old=y_new;
                     end
                     if(in_dy==0)
-                       psi_bound(azimuthal_discretization_number-az_count+1,pol_count,ray_iden-num_y_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                       psi_bound(azimuthal_discretization_number-az_count+1,pol_count,ray_iden-num_y_rays)=psi_out(in_dx_old,in_dy_old,az_count,pol_count,ray_index_count(in_dx_old,in_dy_old,az_count,pol_count));
                     elseif in_dx==mesh_center_abscissa_number+1
-                       psi_bound(3*azimuthal_discretization_number/2-az_count+1,pol_count,ray_iden+num_x_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                       psi_bound(3*azimuthal_discretization_number/2-az_count+1,pol_count,ray_iden+num_x_rays)=psi_out(in_dx_old,in_dy_old,az_count,pol_count,ray_index_count(in_dx_old,in_dy_old,az_count,pol_count));
 
                     end
                 end
@@ -534,22 +627,39 @@ for az_count=3*N_a/4+1:N_a
                 y_old=Y;
         
                 while in_dx<=mesh_center_abscissa_number && in_dy>=1
-                    ray_index_count(in_dy,in_dx,az_count,pol_count)=ray_index_count(in_dy,in_dx,az_count,pol_count)+1;
+                     ray_index_count(in_dx,in_dy,az_count,pol_count)=ray_index_count(in_dx,in_dy,az_count,pol_count)+1;
+                     t=ray_index_count(in_dx,in_dy,az_count,pol_count);
                         if in_dy==mesh_center_ordinate_number
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_bound(az_count, pol_count, ray_iden);
+                            psi_in(in_dx,in_dy,az_count,pol_count,ray_index_count(in_dx,in_dy,az_count,pol_count))=0*psi_bound(az_count, pol_count, ray_iden);
                         else
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                            psi_in(in_dx,in_dy,az_count,pol_count,ray_index_count(in_dx,in_dy,az_count,pol_count))=psi_out(in_dx_old,in_dy_old,az_count,pol_count,ray_index_count(in_dx_old,in_dy_old,az_count,pol_count));
     
                         end
     
-                        del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=(psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-S(in_dy,in_dx)/sigma_t)*exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-                        psi_out(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-    
-                        avg_psi(in_dy,in_dx,az_count,pol_count)=avg_psi(in_dy,in_dx,az_count,pol_count)+del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count))+S(in_dy,in_dx)*s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count));
+                    cosphia=cos(alt_azim_theta(az_count,1));
+                    sinphia=sin(alt_azim_theta(az_count,1));
 
-    
-                        scaler_flux(in_dy,in_dx)=scaler_flux(in_dy,in_dx)+(del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count))+S(in_dy,in_dx)*s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count)))*weight_azimuthal(az_count,1)*w(pol_count,1);
-                        
+                    q_bar_azimtrack(in_dx,in_dy,az_count,pol_count,t)=(1/(4*pi))*(q_bar_i(in_dx,in_dy)+(x_c_t(in_dx,in_dy,az_count,t)-X_i_c(in_dx,in_dy))*q_i_x(in_dx,in_dy)+(y_c_t(in_dx,in_dy,az_count,t)-Y_i_c(in_dx,in_dy))*q_i_y(in_dx,in_dy));
+                    q_cap_track(in_dx,in_dy,az_count,pol_count,t)=(1/(4*pi))*(cosphia*mu(pol_count,1)*q_i_x(in_dx,in_dy)+sinphia*mu(pol_count,1)*q_i_y(in_dx,in_dy))/ksi(in_dx,in_dy,az_count);
+
+                    temp_psi_in=psi_in(in_dx,in_dy,az_count,pol_count,t);
+                    track_mid_q=q_bar_azimtrack(in_dx,in_dy,az_count,pol_count,t);
+                    temp_F_1=F_1(in_dx,in_dy,az_count,pol_count,t);
+                    temp_F_2=F_2(in_dx,in_dy,az_count,pol_count,t);
+                    temp_q_cap_track=q_cap_track(in_dx,in_dy,az_count,pol_count,t);
+
+
+                    psi_out(in_dx,in_dy,az_count,pol_count,t)=temp_psi_in+(track_mid_q/sigma_t-temp_psi_in)*temp_F_1+temp_q_cap_track/(2*(sigma_t)^2)*temp_F_2;
+                    temp_psi_out=psi_out(in_dx,in_dy,az_count,pol_count,t);
+                    del_psi(in_dx,in_dy,az_count,pol_count,t)=temp_psi_in-temp_psi_out;
+                    temp_del_psi=del_psi(in_dx,in_dy,az_count,pol_count,t);
+                    
+                    scaler_flux(in_dx,in_dy)=scaler_flux(in_dx,in_dy)+1/(dx*dy*sigma_t)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*mu(pol_count,1)*w(pol_count,1)*temp_del_psi;
+                    
+                    temp_adj_len=adj_len(in_dx,in_dy,az_count,t);
+                    temp_H=H(in_dx,in_dy,az_count,pol_count,t);
+                    x_moment_scaler_flux(in_dx,in_dy)=x_moment_scaler_flux(in_dx,in_dy)+1/(sigma_t*dx*dy)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*mu(pol_count,1)*w(pol_count,1)*(cosphia*temp_adj_len/ksi(in_dx,in_dy,az_count)*temp_psi_in*temp_H+x_old*temp_del_psi);
+                    y_moment_scaler_flux(in_dx,in_dy)=y_moment_scaler_flux(in_dx,in_dy)+1/(sigma_t*dx*dy)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*mu(pol_count,1)*w(pol_count,1)*(sinphia*temp_adj_len/ksi(in_dx,in_dy,az_count)*temp_psi_in*temp_H+y_old*temp_del_psi);
 
                     x_new=dx*in_dx;
                     y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
@@ -584,9 +694,9 @@ for az_count=3*N_a/4+1:N_a
                         y_old=y_new;
                     end
                     if(in_dy==0)
-                       psi_bound(azimuthal_discretization_number-az_count+1,pol_count,ray_iden-num_y_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                       psi_bound(azimuthal_discretization_number-az_count+1,pol_count,ray_iden-num_y_rays)=psi_out(in_dx_old,in_dy_old,az_count,pol_count,ray_index_count(in_dx_old,in_dy_old,az_count,pol_count));
                     elseif in_dx==mesh_center_abscissa_number+1
-                       psi_bound(3*azimuthal_discretization_number/2-az_count+1,pol_count,ray_iden+num_x_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                       psi_bound(3*azimuthal_discretization_number/2-az_count+1,pol_count,ray_iden+num_x_rays)=psi_out(in_dx_old,in_dy_old,az_count,pol_count,ray_index_count(in_dx_old,in_dy_old,az_count,pol_count));
 
                     end
 
@@ -631,19 +741,39 @@ for az_count=N_a/2+1:3*N_a/4
                 y_old=ray_pos_y_bound(p_y,1);
         
                 while in_dx>=1 && in_dy>=1
-                    ray_index_count(in_dy,in_dx,az_count,pol_count)=ray_index_count(in_dy,in_dx,az_count,pol_count)+1;
+                     ray_index_count(in_dx,in_dy,az_count,pol_count)=ray_index_count(in_dx,in_dy,az_count,pol_count)+1;
+                     t=ray_index_count(in_dx,in_dy,az_count,pol_count);
                         if in_dx==mesh_center_abscissa_number
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_bound(az_count, pol_count, ray_iden);
+                            psi_in(in_dx,in_dy,az_count,pol_count,ray_index_count(in_dx,in_dy,az_count,pol_count))=0*psi_bound(az_count, pol_count, ray_iden);
                         else
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                            psi_in(in_dx,in_dy,az_count,pol_count,ray_index_count(in_dx,in_dy,az_count,pol_count))=psi_out(in_dx_old,in_dy_old,az_count,pol_count,ray_index_count(in_dx_old,in_dy_old,az_count,pol_count));
     
                         end
-    
-                        del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=(psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-S(in_dy,in_dx)/sigma_t)*exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-                        psi_out(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-    
-                        avg_psi(in_dy,in_dx,az_count,pol_count)=avg_psi(in_dy,in_dx,az_count,pol_count)+del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count))+S(in_dy,in_dx)*s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count));
-                         scaler_flux(in_dy,in_dx)=scaler_flux(in_dy,in_dx)+(del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count))+S(in_dy,in_dx)*s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count)))*weight_azimuthal(az_count,1)*w(pol_count,1);
+                    
+                    cosphia=cos(alt_azim_theta(az_count,1));
+                    sinphia=sin(alt_azim_theta(az_count,1));
+
+                    q_bar_azimtrack(in_dx,in_dy,az_count,pol_count,t)=(1/(4*pi))*(q_bar_i(in_dx,in_dy)+(x_c_t(in_dx,in_dy,az_count,t)-X_i_c(in_dx,in_dy))*q_i_x(in_dx,in_dy)+(y_c_t(in_dx,in_dy,az_count,t)-Y_i_c(in_dx,in_dy))*q_i_y(in_dx,in_dy));
+                    q_cap_track(in_dx,in_dy,az_count,pol_count,t)=(1/(4*pi))*(cosphia*mu(pol_count,1)*q_i_x(in_dx,in_dy)+sinphia*mu(pol_count,1)*q_i_y(in_dx,in_dy))/ksi(in_dx,in_dy,az_count);
+
+                    temp_psi_in=psi_in(in_dx,in_dy,az_count,pol_count,t);
+                    track_mid_q=q_bar_azimtrack(in_dx,in_dy,az_count,pol_count,t);
+                    temp_F_1=F_1(in_dx,in_dy,az_count,pol_count,t);
+                    temp_F_2=F_2(in_dx,in_dy,az_count,pol_count,t);
+                    temp_q_cap_track=q_cap_track(in_dx,in_dy,az_count,pol_count,t);
+
+
+                    psi_out(in_dx,in_dy,az_count,pol_count,t)=temp_psi_in+(track_mid_q/sigma_t-temp_psi_in)*temp_F_1+temp_q_cap_track/(2*(sigma_t)^2)*temp_F_2;
+                    temp_psi_out=psi_out(in_dx,in_dy,az_count,pol_count,t);
+                    del_psi(in_dx,in_dy,az_count,pol_count,t)=temp_psi_in-temp_psi_out;
+                    temp_del_psi=del_psi(in_dx,in_dy,az_count,pol_count,t);
+                    
+                    scaler_flux(in_dx,in_dy)=scaler_flux(in_dx,in_dy)+1/(dx*dy*sigma_t)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*mu(pol_count,1)*w(pol_count,1)*temp_del_psi;
+                    
+                    temp_adj_len=adj_len(in_dx,in_dy,az_count,t);
+                    temp_H=H(in_dx,in_dy,az_count,pol_count,t);
+                    x_moment_scaler_flux(in_dx,in_dy)=x_moment_scaler_flux(in_dx,in_dy)+1/(sigma_t*dx*dy)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*mu(pol_count,1)*w(pol_count,1)*(cosphia*temp_adj_len/ksi(in_dx,in_dy,az_count)*temp_psi_in*temp_H+x_old*temp_del_psi);
+                    y_moment_scaler_flux(in_dx,in_dy)=y_moment_scaler_flux(in_dx,in_dy)+1/(sigma_t*dx*dy)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*mu(pol_count,1)*w(pol_count,1)*(sinphia*temp_adj_len/ksi(in_dx,in_dy,az_count)*temp_psi_in*temp_H+y_old*temp_del_psi);
 
                     x_new=dx*(in_dx-1);
                     y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
@@ -684,10 +814,10 @@ for az_count=N_a/2+1:3*N_a/4
                         y_old=y_new;
                     end
                     if(in_dy==0)
-                       psi_bound(azimuthal_discretization_number-az_count+1,pol_count,ray_iden-num_y_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                       psi_bound(azimuthal_discretization_number-az_count+1,pol_count,ray_iden-num_y_rays)=psi_out(in_dx_old,in_dy_old,az_count,pol_count,ray_index_count(in_dx_old,in_dy_old,az_count,pol_count));
                     elseif in_dx==0
                         
-                       psi_bound(3*azimuthal_discretization_number/2-az_count+1,pol_count,ray_iden+num_x_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                       psi_bound(3*azimuthal_discretization_number/2-az_count+1,pol_count,ray_iden+num_x_rays)=psi_out(in_dx_old,in_dy_old,az_count,pol_count,ray_index_count(in_dx_old,in_dy_old,az_count,pol_count));
 
                     end
                 end
@@ -711,23 +841,39 @@ for az_count=N_a/2+1:3*N_a/4
                 y_old=Y;
         
                 while in_dx>=1 && in_dy>=1
-                    ray_index_count(in_dy,in_dx,az_count,pol_count)=ray_index_count(in_dy,in_dx,az_count,pol_count)+1;
+                     ray_index_count(in_dx,in_dy,az_count,pol_count)=ray_index_count(in_dx,in_dy,az_count,pol_count)+1;
+                     t=ray_index_count(in_dx,in_dy,az_count,pol_count);
                         if in_dy==mesh_center_ordinate_number
-                            
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_bound(az_count, pol_count, ray_iden);
+                            psi_in(in_dx,in_dy,az_count,pol_count,ray_index_count(in_dx,in_dy,az_count,pol_count))=0*psi_bound(az_count, pol_count, ray_iden);
                         else
-                            psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                            psi_in(in_dx,in_dy,az_count,pol_count,ray_index_count(in_dx,in_dy,az_count,pol_count))=psi_out(in_dx_old,in_dy_old,az_count,pol_count,ray_index_count(in_dx_old,in_dy_old,az_count,pol_count));
     
                         end
     
-                        del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=(psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-S(in_dy,in_dx)/sigma_t)*exponential_portion(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-                        psi_out(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))=psi_in(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))-del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count));
-    
-                        avg_psi(in_dy,in_dx,az_count,pol_count)=avg_psi(in_dy,in_dx,az_count,pol_count)+del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count))+S(in_dy,in_dx)*s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count));
+                    cosphia=cos(alt_azim_theta(az_count,1));
+                    sinphia=sin(alt_azim_theta(az_count,1));
 
-    
-                        scaler_flux(in_dy,in_dx)=scaler_flux(in_dy,in_dx)+(del_psi(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count))+S(in_dy,in_dx)*s_len(in_dy,in_dx,az_count,pol_count,ray_index_count(in_dy,in_dx,az_count,pol_count))/(sigma_t*sum_s_len(in_dy,in_dx,az_count,pol_count)))*weight_azimuthal(az_count,1)*w(pol_count,1);
-                        
+                    q_bar_azimtrack(in_dx,in_dy,az_count,pol_count,t)=(1/(4*pi))*(q_bar_i(in_dx,in_dy)+(x_c_t(in_dx,in_dy,az_count,t)-X_i_c(in_dx,in_dy))*q_i_x(in_dx,in_dy)+(y_c_t(in_dx,in_dy,az_count,t)-Y_i_c(in_dx,in_dy))*q_i_y(in_dx,in_dy));
+                    q_cap_track(in_dx,in_dy,az_count,pol_count,t)=(1/(4*pi))*(cosphia*mu(pol_count,1)*q_i_x(in_dx,in_dy)+sinphia*mu(pol_count,1)*q_i_y(in_dx,in_dy))/ksi(in_dx,in_dy,az_count);
+
+                    temp_psi_in=psi_in(in_dx,in_dy,az_count,pol_count,t);
+                    track_mid_q=q_bar_azimtrack(in_dx,in_dy,az_count,pol_count,t);
+                    temp_F_1=F_1(in_dx,in_dy,az_count,pol_count,t);
+                    temp_F_2=F_2(in_dx,in_dy,az_count,pol_count,t);
+                    temp_q_cap_track=q_cap_track(in_dx,in_dy,az_count,pol_count,t);
+
+
+                    psi_out(in_dx,in_dy,az_count,pol_count,t)=temp_psi_in+(track_mid_q/sigma_t-temp_psi_in)*temp_F_1+temp_q_cap_track/(2*(sigma_t)^2)*temp_F_2;
+                    temp_psi_out=psi_out(in_dx,in_dy,az_count,pol_count,t);
+                    del_psi(in_dx,in_dy,az_count,pol_count,t)=temp_psi_in-temp_psi_out;
+                    temp_del_psi=del_psi(in_dx,in_dy,az_count,pol_count,t);
+                    
+                    scaler_flux(in_dx,in_dy)=scaler_flux(in_dx,in_dy)+1/(dx*dy*sigma_t)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*mu(pol_count,1)*w(pol_count,1)*temp_del_psi;
+                    
+                    temp_adj_len=adj_len(in_dx,in_dy,az_count,t);
+                    temp_H=H(in_dx,in_dy,az_count,pol_count,t);
+                    x_moment_scaler_flux(in_dx,in_dy)=x_moment_scaler_flux(in_dx,in_dy)+1/(sigma_t*dx*dy)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*mu(pol_count,1)*w(pol_count,1)*(cosphia*temp_adj_len/ksi(in_dx,in_dy,az_count)*temp_psi_in*temp_H+x_old*temp_del_psi);
+                    y_moment_scaler_flux(in_dx,in_dy)=y_moment_scaler_flux(in_dx,in_dy)+1/(sigma_t*dx*dy)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*mu(pol_count,1)*w(pol_count,1)*(sinphia*temp_adj_len/ksi(in_dx,in_dy,az_count)*temp_psi_in*temp_H+y_old*temp_del_psi);
 
                     x_new=dx*(in_dx-1);
                   
@@ -766,9 +912,9 @@ for az_count=N_a/2+1:3*N_a/4
                         y_old=y_new;
                     end
                     if(in_dy==0)
-                       psi_bound(azimuthal_discretization_number-az_count+1,pol_count,ray_iden-num_y_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                       psi_bound(azimuthal_discretization_number-az_count+1,pol_count,ray_iden-num_y_rays)=psi_out(in_dx_old,in_dy_old,az_count,pol_count,ray_index_count(in_dx_old,in_dy_old,az_count,pol_count));
                     elseif in_dx==0
-                       psi_bound(3*azimuthal_discretization_number/2-az_count+1,pol_count,ray_iden+num_x_rays)=psi_out(in_dy_old,in_dx_old,az_count,pol_count,ray_index_count(in_dy_old,in_dx_old,az_count,pol_count));
+                       psi_bound(3*azimuthal_discretization_number/2-az_count+1,pol_count,ray_iden+num_x_rays)=psi_out(in_dx_old,in_dy_old,az_count,pol_count,ray_index_count(in_dx_old,in_dy_old,az_count,pol_count));
 
                     end
                 end
@@ -777,6 +923,5 @@ for az_count=N_a/2+1:3*N_a/4
     end
 
 end
-
 
 

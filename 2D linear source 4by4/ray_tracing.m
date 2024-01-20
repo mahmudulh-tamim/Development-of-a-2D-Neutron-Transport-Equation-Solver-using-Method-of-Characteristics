@@ -1,7 +1,8 @@
-function [alt_azim_theta,length_of_rays,fin_d,sum_len]=ray_tracing(X,Y,dx,dy,N_a)
+
+function [alt_azim_theta,length_of_rays,fin_d,sum_len,x_c_t,y_c_t]=ray_tracing(X,Y,dx,dy,N_a)
 
 
-ray_spacing=0.01;
+ray_spacing=0.1;
 
 
 
@@ -30,10 +31,14 @@ init_d=zeros(azimuthal_discretization_number,1);
 fin_d=zeros(azimuthal_discretization_number,1);
 init_d(:,1)=ray_spacing;
 
-length_of_rays=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number,500);
-sum_len=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number);
+length_of_rays=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,500);
 
-ray_index_count=zeros(mesh_center_ordinate_number,mesh_center_abscissa_number,azimuthal_discretization_number);
+x_c_t=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,500);
+y_c_t=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,500);
+
+sum_len=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number);
+
+ray_index_count=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number);
 
 
 %% bottom to top rays
@@ -71,7 +76,7 @@ for az_count=1:N_a/4
         y_old=ray_pos_y_bound(p_y,1);
 
         while in_dx<=mesh_center_abscissa_number && in_dy<=mesh_center_ordinate_number
-            ray_index_count(in_dy,in_dx,az_count)=ray_index_count(in_dy,in_dx,az_count)+1;
+            ray_index_count(in_dx,in_dy,az_count)=ray_index_count(in_dx,in_dy,az_count)+1;
             
 
             x_new=dx*in_dx;
@@ -81,15 +86,23 @@ for az_count=1:N_a/4
                 y_new=dy*in_dy;
                 x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
                  
-                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
+                length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
+                sum_len(in_dx,in_dy,az_count)=sum_len(in_dx,in_dy,az_count)+length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count));
+
+                x_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(x_old+x_new)/2;
+                y_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(y_old+y_new)/2;
+
                 in_dy=in_dy+1;
                 x_old=x_new;
                 y_old=y_new;
             elseif abs(y_new-dy*in_dy)<=10^(-14) 
                 
-                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                 sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
+                length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
+                 sum_len(in_dx,in_dy,az_count)=sum_len(in_dx,in_dy,az_count)+length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count));
+                
+                x_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(x_old+x_new)/2;
+                y_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(y_old+y_new)/2;
+
                 in_dx=in_dx+1;
                 in_dy=in_dy+1;
                 x_old=x_new;
@@ -98,8 +111,11 @@ for az_count=1:N_a/4
             else
                  
               
-                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
+                length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
+                sum_len(in_dx,in_dy,az_count)=sum_len(in_dx,in_dy,az_count)+length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count));
+                
+                x_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(x_old+x_new)/2;
+                y_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(y_old+y_new)/2;
 
                 in_dx=in_dx+1;
                 x_old=x_new;
@@ -124,7 +140,7 @@ for az_count=1:N_a/4
         y_old=0;
 
         while in_dx<=mesh_center_abscissa_number && in_dy<=mesh_center_ordinate_number
-            ray_index_count(in_dy,in_dx,az_count)=ray_index_count(in_dy,in_dx,az_count)+1;
+            ray_index_count(in_dx,in_dy,az_count)=ray_index_count(in_dx,in_dy,az_count)+1;
             
             x_new=dx*in_dx;
             y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
@@ -133,15 +149,22 @@ for az_count=1:N_a/4
                 y_new=dy*in_dy;
                 x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
                  
-                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
+                length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
+                x_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(x_old+x_new)/2;
+                y_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(y_old+y_new)/2;
+
+                sum_len(in_dx,in_dy,az_count)=sum_len(in_dx,in_dy,az_count)+length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count));
                 in_dy=in_dy+1;
                 x_old=x_new;
                 y_old=y_new;
             elseif abs(y_new-dy*in_dy)<=10^(-14)
                 
-                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
+                length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
+                
+                x_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(x_old+x_new)/2;
+                y_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(y_old+y_new)/2;
+
+                sum_len(in_dx,in_dy,az_count)=sum_len(in_dx,in_dy,az_count)+length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count));
                 in_dx=in_dx+1;
                 in_dy=in_dy+1;
                 x_old=x_new;
@@ -150,8 +173,12 @@ for az_count=1:N_a/4
             
             else
                  
-                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
+                length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
+                
+                x_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(x_old+x_new)/2;
+                y_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(y_old+y_new)/2;
+
+                sum_len(in_dx,in_dy,az_count)=sum_len(in_dx,in_dy,az_count)+length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count));
 
                 in_dx=in_dx+1;
                 x_old=x_new;
@@ -196,7 +223,7 @@ for az_count=N_a/4+1:N_a/2
         y_old=ray_pos_y_bound(p_y,1);
 
         while in_dx>=1 && in_dy<=mesh_center_ordinate_number
-            ray_index_count(in_dy,in_dx,az_count)=ray_index_count(in_dy,in_dx,az_count)+1;
+            ray_index_count(in_dx,in_dy,az_count)=ray_index_count(in_dx,in_dy,az_count)+1;
             
             
             x_new=dx*(in_dx-1);
@@ -206,15 +233,22 @@ for az_count=N_a/4+1:N_a/2
                 y_new=dy*in_dy;
                 x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
                  
-                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
+                length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
+                x_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(x_old+x_new)/2;
+                y_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(y_old+y_new)/2;  
+
+                sum_len(in_dx,in_dy,az_count)=sum_len(in_dx,in_dy,az_count)+length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count));
                 in_dy=in_dy+1;
                 x_old=x_new;
                 y_old=y_new;
             elseif abs(y_new-dy*in_dy)<=10^(-14)
                 
-                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
+                length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
+
+                x_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(x_old+x_new)/2;
+                y_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(y_old+y_new)/2;
+
+                sum_len(in_dx,in_dy,az_count)=sum_len(in_dx,in_dy,az_count)+length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count));
 
                 in_dx=in_dx-1;
                 in_dy=in_dy+1;
@@ -223,8 +257,12 @@ for az_count=N_a/4+1:N_a/2
 
             else
                 
-                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
+                length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
+
+                x_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(x_old+x_new)/2;
+                y_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(y_old+y_new)/2;
+
+                sum_len(in_dx,in_dy,az_count)=sum_len(in_dx,in_dy,az_count)+length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count));
 
                 in_dx=in_dx-1;
                 x_old=x_new;
@@ -249,7 +287,7 @@ for az_count=N_a/4+1:N_a/2
         y_old=0;
 
         while in_dx>=1 && in_dy<=mesh_center_ordinate_number
-            ray_index_count(in_dy,in_dx,az_count)=ray_index_count(in_dy,in_dx,az_count)+1;
+            ray_index_count(in_dx,in_dy,az_count)=ray_index_count(in_dx,in_dy,az_count)+1;
 
             
             x_new=dx*(in_dx-1);
@@ -260,16 +298,24 @@ for az_count=N_a/4+1:N_a/2
                 y_new=dy*in_dy;
                 x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
                 
-                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
+                length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
+
+                x_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(x_old+x_new)/2;
+                y_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(y_old+y_new)/2;
+
+                sum_len(in_dx,in_dy,az_count)=sum_len(in_dx,in_dy,az_count)+length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count));
 
                 in_dy=in_dy+1;
                 x_old=x_new;
                 y_old=y_new;
             elseif abs(y_new-dy*in_dy)<=10^(-14)
                 
-                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
+                length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
+
+                x_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(x_old+x_new)/2;
+                y_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(y_old+y_new)/2;
+
+                sum_len(in_dx,in_dy,az_count)=sum_len(in_dx,in_dy,az_count)+length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count));
 
                 in_dx=in_dx-1;
                 in_dy=in_dy+1;
@@ -278,8 +324,12 @@ for az_count=N_a/4+1:N_a/2
 
             else
                 
-                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
+                length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
+
+                x_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(x_old+x_new)/2;
+                y_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(y_old+y_new)/2;
+
+                sum_len(in_dx,in_dy,az_count)=sum_len(in_dx,in_dy,az_count)+length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count));
 
                 in_dx=in_dx-1;
                 x_old=x_new;
@@ -325,7 +375,7 @@ for az_count=3*N_a/4+1:N_a
         y_old=ray_pos_y_bound(p_y,1);
 
         while in_dx<=mesh_center_abscissa_number && in_dy>=1
-            ray_index_count(in_dy,in_dx,az_count)=ray_index_count(in_dy,in_dx,az_count)+1;
+            ray_index_count(in_dx,in_dy,az_count)=ray_index_count(in_dx,in_dy,az_count)+1;
             x_new=dx*in_dx;
             y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
 
@@ -333,15 +383,23 @@ for az_count=3*N_a/4+1:N_a
                 y_new=dy*(in_dy-1);
                 x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
                  
-                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
+                length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
+                
+                x_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(x_old+x_new)/2;
+                y_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(y_old+y_new)/2;
+
+                sum_len(in_dx,in_dy,az_count)=sum_len(in_dx,in_dy,az_count)+length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count));
 
                 in_dy=in_dy-1;
                 x_old=x_new;
                 y_old=y_new;
             elseif abs(y_new-dy*(in_dy-1))<=10^(-14)
-                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
+                length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
+                
+                x_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(x_old+x_new)/2;
+                y_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(y_old+y_new)/2;
+
+                sum_len(in_dx,in_dy,az_count)=sum_len(in_dx,in_dy,az_count)+length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count));
 
                 in_dx=in_dx+1;
                 in_dy=in_dy-1;
@@ -349,8 +407,12 @@ for az_count=3*N_a/4+1:N_a
                 y_old=y_new;
 
             else
-                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
+                length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
+                
+                x_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(x_old+x_new)/2;
+                y_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(y_old+y_new)/2;
+
+                sum_len(in_dx,in_dy,az_count)=sum_len(in_dx,in_dy,az_count)+length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count));
 
                 in_dx=in_dx+1;
                 x_old=x_new;
@@ -376,7 +438,7 @@ for az_count=3*N_a/4+1:N_a
         y_old=Y;
 
         while in_dx<=mesh_center_abscissa_number && in_dy>=1
-            ray_index_count(in_dy,in_dx,az_count)=ray_index_count(in_dy,in_dx,az_count)+1;
+            ray_index_count(in_dx,in_dy,az_count)=ray_index_count(in_dx,in_dy,az_count)+1;
             x_new=dx*in_dx;
             y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
 
@@ -384,15 +446,22 @@ for az_count=3*N_a/4+1:N_a
                 y_new=dy*(in_dy-1);
                 x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
                  
-                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
+                length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
+                x_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(x_old+x_new)/2;
+                y_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(y_old+y_new)/2;
+
+                sum_len(in_dx,in_dy,az_count)=sum_len(in_dx,in_dy,az_count)+length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count));
 
                 in_dy=in_dy-1;
                 x_old=x_new;
                 y_old=y_new;
             elseif abs(y_new-dy*(in_dy-1))<=10^(-14)
-                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
+                length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
+                
+                x_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(x_old+x_new)/2;
+                y_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(y_old+y_new)/2;
+
+                sum_len(in_dx,in_dy,az_count)=sum_len(in_dx,in_dy,az_count)+length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count));
 
                 in_dx=in_dx+1;
                 in_dy=in_dy-1;
@@ -400,8 +469,12 @@ for az_count=3*N_a/4+1:N_a
                 y_old=y_new;
 
             else
-                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
+                length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
+
+                x_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(x_old+x_new)/2;
+                y_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(y_old+y_new)/2;
+
+                sum_len(in_dx,in_dy,az_count)=sum_len(in_dx,in_dy,az_count)+length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count));
 
                 in_dx=in_dx+1;
                 x_old=x_new;
@@ -447,7 +520,7 @@ for az_count=N_a/2+1:3*N_a/4
         y_old=ray_pos_y_bound(p_y,1);
 
         while in_dx>=1 && in_dy>=1
-            ray_index_count(in_dy,in_dx,az_count)=ray_index_count(in_dy,in_dx,az_count)+1;
+            ray_index_count(in_dx,in_dy,az_count)=ray_index_count(in_dx,in_dy,az_count)+1;
             x_new=dx*(in_dx-1);
             y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
 
@@ -456,15 +529,23 @@ for az_count=N_a/2+1:3*N_a/4
                 x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
                  
                
-                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
+                length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
+                
+                x_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(x_old+x_new)/2;
+                y_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(y_old+y_new)/2;
+
+                sum_len(in_dx,in_dy,az_count)=sum_len(in_dx,in_dy,az_count)+length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count));
 
                 in_dy=in_dy-1;
                 x_old=x_new;
                 y_old=y_new;
            elseif abs(y_new-dy*(in_dy-1))<=10^(-14)
-                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
+                length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
+                
+                x_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(x_old+x_new)/2;
+                y_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(y_old+y_new)/2;
+
+                sum_len(in_dx,in_dy,az_count)=sum_len(in_dx,in_dy,az_count)+length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count));
 
                 in_dx=in_dx-1;
                 in_dy=in_dy-1;
@@ -473,8 +554,12 @@ for az_count=N_a/2+1:3*N_a/4
 
                 
             else
-                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
+                length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
+
+                x_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(x_old+x_new)/2;
+                y_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(y_old+y_new)/2;
+
+                sum_len(in_dx,in_dy,az_count)=sum_len(in_dx,in_dy,az_count)+length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count));
 
                 in_dx=in_dx-1;
                 x_old=x_new;
@@ -503,7 +588,7 @@ for az_count=N_a/2+1:3*N_a/4
         y_old=Y;
 
         while in_dx>=1 && in_dy>=1
-            ray_index_count(in_dy,in_dx,az_count)=ray_index_count(in_dy,in_dx,az_count)+1;
+            ray_index_count(in_dx,in_dy,az_count)=ray_index_count(in_dx,in_dy,az_count)+1;
             x_new=dx*(in_dx-1);
           
             y_new=tan(alt_azim_theta(az_count,1))*(x_new-x_old)+y_old;
@@ -512,15 +597,21 @@ for az_count=N_a/2+1:3*N_a/4
                 y_new=dy*(in_dy-1);
                 x_new=x_old+(y_new-y_old)/tan(alt_azim_theta(az_count,1));
                 
-                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
+                length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
+                
+                x_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(x_old+x_new)/2;
+                y_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(y_old+y_new)/2;
+
+                sum_len(in_dx,in_dy,az_count)=sum_len(in_dx,in_dy,az_count)+length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count));
 
                 in_dy=in_dy-1;
                 x_old=x_new;
                 y_old=y_new;
             elseif abs(y_new-dy*(in_dy-1))<=10^(-14)
-                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
+                length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
+                x_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(x_old+x_new)/2;
+                y_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(y_old+y_new)/2;
+                sum_len(in_dx,in_dy,az_count)=sum_len(in_dx,in_dy,az_count)+length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count));
 
                 in_dx=in_dx-1;
                 in_dy=in_dy-1;
@@ -528,8 +619,11 @@ for az_count=N_a/2+1:3*N_a/4
                 y_old=y_new;
 
             else
-                length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
-                sum_len(in_dy,in_dx,az_count)=sum_len(in_dy,in_dx,az_count)+length_of_rays(in_dy,in_dx,az_count,ray_index_count(in_dy,in_dx,az_count));
+                length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=sqrt((y_new-y_old)^2+(x_new-x_old)^2);
+
+                x_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(x_old+x_new)/2;
+                y_c_t(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count))=(y_old+y_new)/2;
+                sum_len(in_dx,in_dy,az_count)=sum_len(in_dx,in_dy,az_count)+length_of_rays(in_dx,in_dy,az_count,ray_index_count(in_dx,in_dy,az_count));
 
                 in_dx=in_dx-1;
                 x_old=x_new;
