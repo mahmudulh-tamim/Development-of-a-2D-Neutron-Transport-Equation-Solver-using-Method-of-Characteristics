@@ -1,4 +1,4 @@
-function [exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d, mesh_center_ordinate_number,mesh_center_abscissa_number, total_rays]=ray_tracing_polar_included(X,Y,dx,dy,N_a,sigma_t)
+function [exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d]=ray_tracing_polar_included(X,Y,dx,dy,N_a,sigma_t)
 
 [alt_azim_theta,length_of_rays,fin_d,sum_len]=ray_tracing(X,Y,dx,dy,N_a);
 
@@ -63,7 +63,7 @@ for az_count=1:N_a/4
     for pol_count=1:polar_discretization_number
             i_x=1;
 
-            total_rays(az_count,pol_count)=num_y_rays+num_x_rays;
+           % total_rays(az_count,pol_count)=num_y_rays+num_x_rays;
 
             for p_y=num_y_rays:-1:1
         
@@ -205,7 +205,7 @@ for az_count=N_a/4+1:N_a/2
 
     for pol_count=1:polar_discretization_number
             
-            total_rays(az_count,pol_count)=num_y_rays+num_x_rays;
+           % total_rays(az_count,pol_count)=num_y_rays+num_x_rays;
         
             i_x=mesh_center_abscissa_number;
         
@@ -348,7 +348,7 @@ for az_count=3*N_a/4+1:N_a
     num_y_rays=length(ray_pos_y_bound);
 
     for pol_count=1:polar_discretization_number
-            total_rays(az_count,pol_count)=num_y_rays+num_x_rays;
+           % total_rays(az_count,pol_count)=num_y_rays+num_x_rays;
             i_x=1;
         
             for p_y=1:num_y_rays
@@ -482,7 +482,7 @@ for az_count=N_a/2+1:3*N_a/4
 
     num_y_rays=length(ray_pos_y_bound);
     for pol_count=1:polar_discretization_number
-            total_rays(az_count,pol_count)=num_y_rays+num_x_rays;
+           % total_rays(az_count,pol_count)=num_y_rays+num_x_rays;
             i_x=mesh_center_abscissa_number;
         
             for p_y=1:num_y_rays

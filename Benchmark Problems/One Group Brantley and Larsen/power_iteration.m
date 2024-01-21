@@ -45,7 +45,7 @@ while abs(max(max(flux_old-flux_new)))>tol %abs((k_new-k_old))>tol
 
     flux_new=k_old/k_new*flux_new_half;
 
-    iteration=1+iteration;
+    iteration=1+iteration
 end
 mesh_centre_x=(dx/2:dx:X)';
 mesh_centre_y=(dx/2:dx:Y)';

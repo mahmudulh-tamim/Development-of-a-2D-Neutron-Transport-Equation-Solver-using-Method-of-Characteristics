@@ -50,7 +50,7 @@ k_new=k_old*new_q_f/old_q_f;
 
 
 iteration_power=1;
-
+%{
 while abs((k_new-k_old))>tol
     flux_old=flux_new;
     k_old=k_new;
@@ -66,7 +66,7 @@ while abs((k_new-k_old))>tol
 
     iteration_power=iteration_power+1;
 end
-
+%}
 figure(1)
 %[mesh_x, mesh_y]=meshgrid(mesh_center_abscissa_number,mesh_center_ordinate_number);
 mesh_x=mesh_center_x;

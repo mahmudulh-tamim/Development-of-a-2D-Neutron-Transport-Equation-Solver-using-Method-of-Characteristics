@@ -1,4 +1,4 @@
-function [X,Y,dx,dy,sigma_t,sigma_s,nu_sigma_f,chi]=geometry_data_structuring()
+function [X,Y,dx,dy,mesh_count_x,mesh_count_y,sigma_t,sigma_s,nu_sigma_f,chi]=geometry_data_structuring()
 %group number
 g=2;
 %region fuel
@@ -37,7 +37,7 @@ nu_sigma_f_m_2=0;
 X=8.9;
 Y=8.9;
 
-dx=0.1; %dx and dy should divide 18,25, 96,86 in integer
+dx=0.1; %dx and dy should divide 1.5,1,8.9 in integer
 dy=0.1;
 
 x=(0:dx:X)';
@@ -216,3 +216,11 @@ for i=1:g
     sigma_s(mesh_p_sec_1_y+1:mesh_p_r_f_y,mesh_p_sec_2_x+1:mesh_p_r_f_x,i,2)=sigma_s_f_2(i,1);
 end
 
+for i=1:2
+
+    chi(:,:,i)=chi(:,:,i)';
+    sigma_t(:,:,i)=sigma_t(:,:,i)';
+    sigma_s(:,:, 1,i)=sigma_s(:,:, 1,i)';
+    sigma_s(:,:, 2,i)=sigma_s(:,:, 2,i)';
+    nu_sigma_f(:,:,i)=nu_sigma_f(:,:,i)';
+end
