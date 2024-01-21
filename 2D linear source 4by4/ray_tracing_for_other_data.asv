@@ -109,7 +109,7 @@ for az_count=1:N_a/4
                     M_xx_i(in_dx,in_dy)=M_xx_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*((omega_x)^2*t_mki^3/3+omega_x*(x_old-X_i_c(in_dx,in_dy))*t_mki^2+t_mki*(x_old-X_i_c(in_dx,in_dy))^2);
                     M_yy_i(in_dx,in_dy)=M_yy_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*((omega_y)^2*t_mki^3/3+omega_y*(y_old-Y_i_c(in_dx,in_dy))*t_mki^2+t_mki*(y_old-Y_i_c(in_dx,in_dy))^2);
 
-                    M_xy_i(in_dx,in_dy)=M_xy_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*(omega_x*omega_y*t_mki^3/3+0.5*((x_old-X_i_c(in_dx,in_dy)*omega_y)+(y_old-Y_i_c(in_dx,in_dy))*omega_x)*t_mki^2+t_mki*(x_old-X_i_c(in_dx,in_dy))*(y_old-Y_i_c(in_dx,in_dy)));
+                    M_xy_i(in_dx,in_dy)=M_xy_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*(omega_x*omega_y*t_mki^3/3+0.5*(()+())+t_mki*(x__old-X_i_c(in_dx,in_dy))*(y_old-Y_i_c(in_dx,in_dy)));
                     
                     wp_bar=mu(pol_count,1)*w(pol_count,1);
                     wa_bar=weight_azimuthal(az_count,1)*fin_d(az_count,1);
@@ -179,7 +179,7 @@ for az_count=1:N_a/4
                     M_xx_i(in_dx,in_dy)=M_xx_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*((omega_x)^2*t_mki^3/3+omega_x*(x_old-X_i_c(in_dx,in_dy))*t_mki^2+t_mki*(x_old-X_i_c(in_dx,in_dy))^2);
                     M_yy_i(in_dx,in_dy)=M_yy_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*((omega_y)^2*t_mki^3/3+omega_y*(y_old-Y_i_c(in_dx,in_dy))*t_mki^2+t_mki*(y_old-Y_i_c(in_dx,in_dy))^2);
 
-                    M_xy_i(in_dx,in_dy)=M_xy_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*(omega_x*omega_y*t_mki^3/3+0.5*((x_old-X_i_c(in_dx,in_dy)*omega_y)+(y_old-Y_i_c(in_dx,in_dy))*omega_x)*t_mki^2+t_mki*(x_old-X_i_c(in_dx,in_dy))*(y_old-Y_i_c(in_dx,in_dy)));
+                    M_xy_i(in_dx,in_dy)=M_xy_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*(omega_x*omega_y*t_mki^3/12+t_mki*(x_c_track-X_i_c(in_dx,in_dy))*(y_c_track-Y_i_c(in_dx,in_dy)));
                     
                     wp_bar=mu(pol_count,1)*w(pol_count,1);
                     wa_bar=weight_azimuthal(az_count,1)*fin_d(az_count,1);
@@ -267,7 +267,7 @@ for az_count=N_a/4+1:N_a/2
                     M_xx_i(in_dx,in_dy)=M_xx_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*((omega_x)^2*t_mki^3/3+omega_x*(x_old-X_i_c(in_dx,in_dy))*t_mki^2+t_mki*(x_old-X_i_c(in_dx,in_dy))^2);
                     M_yy_i(in_dx,in_dy)=M_yy_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*((omega_y)^2*t_mki^3/3+omega_y*(y_old-Y_i_c(in_dx,in_dy))*t_mki^2+t_mki*(y_old-Y_i_c(in_dx,in_dy))^2);
 
-                    M_xy_i(in_dx,in_dy)=M_xy_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*(omega_x*omega_y*t_mki^3/3+0.5*((x_old-X_i_c(in_dx,in_dy)*omega_y)+(y_old-Y_i_c(in_dx,in_dy))*omega_x)*t_mki^2+t_mki*(x_old-X_i_c(in_dx,in_dy))*(y_old-Y_i_c(in_dx,in_dy)));
+                    M_xy_i(in_dx,in_dy)=M_xy_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*(omega_x*omega_y*t_mki^3/12+t_mki*(x_c_track-X_i_c(in_dx,in_dy))*(y_c_track-Y_i_c(in_dx,in_dy)));
 
                    
                     x_new=dx*(in_dx-1);
@@ -323,7 +323,7 @@ for az_count=N_a/4+1:N_a/2
                     M_xx_i(in_dx,in_dy)=M_xx_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*((omega_x)^2*t_mki^3/3+omega_x*(x_old-X_i_c(in_dx,in_dy))*t_mki^2+t_mki*(x_old-X_i_c(in_dx,in_dy))^2);
                     M_yy_i(in_dx,in_dy)=M_yy_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*((omega_y)^2*t_mki^3/3+omega_y*(y_old-Y_i_c(in_dx,in_dy))*t_mki^2+t_mki*(y_old-Y_i_c(in_dx,in_dy))^2);
 
-                    M_xy_i(in_dx,in_dy)=M_xy_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*(omega_x*omega_y*t_mki^3/3+0.5*((x_old-X_i_c(in_dx,in_dy)*omega_y)+(y_old-Y_i_c(in_dx,in_dy))*omega_x)*t_mki^2+t_mki*(x_old-X_i_c(in_dx,in_dy))*(y_old-Y_i_c(in_dx,in_dy)));
+                    M_xy_i(in_dx,in_dy)=M_xy_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*(omega_x*omega_y*t_mki^3/12+t_mki*(x_c_track-X_i_c(in_dx,in_dy))*(y_c_track-Y_i_c(in_dx,in_dy)));
                     
                     
 
@@ -402,7 +402,7 @@ for az_count=3*N_a/4+1:N_a
                     M_xx_i(in_dx,in_dy)=M_xx_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*((omega_x)^2*t_mki^3/3+omega_x*(x_old-X_i_c(in_dx,in_dy))*t_mki^2+t_mki*(x_old-X_i_c(in_dx,in_dy))^2);
                     M_yy_i(in_dx,in_dy)=M_yy_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*((omega_y)^2*t_mki^3/3+omega_y*(y_old-Y_i_c(in_dx,in_dy))*t_mki^2+t_mki*(y_old-Y_i_c(in_dx,in_dy))^2);
 
-                    M_xy_i(in_dx,in_dy)=M_xy_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*(omega_x*omega_y*t_mki^3/3+0.5*((x_old-X_i_c(in_dx,in_dy)*omega_y)+(y_old-Y_i_c(in_dx,in_dy))*omega_x)*t_mki^2+t_mki*(x_old-X_i_c(in_dx,in_dy))*(y_old-Y_i_c(in_dx,in_dy)));
+                    M_xy_i(in_dx,in_dy)=M_xy_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*(omega_x*omega_y*t_mki^3/12+t_mki*(x_c_track-X_i_c(in_dx,in_dy))*(y_c_track-Y_i_c(in_dx,in_dy)));
                    
                     wp_bar=mu(pol_count,1)*w(pol_count,1);
                     wa_bar=weight_azimuthal(az_count,1)*fin_d(az_count,1);
@@ -470,7 +470,7 @@ for az_count=3*N_a/4+1:N_a
                     M_xx_i(in_dx,in_dy)=M_xx_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*((omega_x)^2*t_mki^3/3+omega_x*(x_old-X_i_c(in_dx,in_dy))*t_mki^2+t_mki*(x_old-X_i_c(in_dx,in_dy))^2);
                     M_yy_i(in_dx,in_dy)=M_yy_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*((omega_y)^2*t_mki^3/3+omega_y*(y_old-Y_i_c(in_dx,in_dy))*t_mki^2+t_mki*(y_old-Y_i_c(in_dx,in_dy))^2);
 
-                    M_xy_i(in_dx,in_dy)=M_xy_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*(omega_x*omega_y*t_mki^3/3+0.5*((x_old-X_i_c(in_dx,in_dy)*omega_y)+(y_old-Y_i_c(in_dx,in_dy))*omega_x)*t_mki^2+t_mki*(x_old-X_i_c(in_dx,in_dy))*(y_old-Y_i_c(in_dx,in_dy)));
+                    M_xy_i(in_dx,in_dy)=M_xy_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*(omega_x*omega_y*t_mki^3/12+t_mki*(x_c_track-X_i_c(in_dx,in_dy))*(y_c_track-Y_i_c(in_dx,in_dy)));
                     
                     wp_bar=mu(pol_count,1)*w(pol_count,1);
                     wa_bar=weight_azimuthal(az_count,1)*fin_d(az_count,1);
@@ -554,7 +554,7 @@ for az_count=N_a/2+1:3*N_a/4
                     M_xx_i(in_dx,in_dy)=M_xx_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*((omega_x)^2*t_mki^3/3+omega_x*(x_old-X_i_c(in_dx,in_dy))*t_mki^2+t_mki*(x_old-X_i_c(in_dx,in_dy))^2);
                     M_yy_i(in_dx,in_dy)=M_yy_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*((omega_y)^2*t_mki^3/3+omega_y*(y_old-Y_i_c(in_dx,in_dy))*t_mki^2+t_mki*(y_old-Y_i_c(in_dx,in_dy))^2);
 
-                    M_xy_i(in_dx,in_dy)=M_xy_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*(omega_x*omega_y*t_mki^3/3+0.5*((x_old-X_i_c(in_dx,in_dy)*omega_y)+(y_old-Y_i_c(in_dx,in_dy))*omega_x)*t_mki^2+t_mki*(x_old-X_i_c(in_dx,in_dy))*(y_old-Y_i_c(in_dx,in_dy)));
+                    M_xy_i(in_dx,in_dy)=M_xy_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*(omega_x*omega_y*t_mki^3/12+t_mki*(x_c_track-X_i_c(in_dx,in_dy))*(y_c_track-Y_i_c(in_dx,in_dy)));
 
 
                     x_new=dx*(in_dx-1);
@@ -608,7 +608,7 @@ for az_count=N_a/2+1:3*N_a/4
                     M_xx_i(in_dx,in_dy)=M_xx_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*((omega_x)^2*t_mki^3/3+omega_x*(x_old-X_i_c(in_dx,in_dy))*t_mki^2+t_mki*(x_old-X_i_c(in_dx,in_dy))^2);
                     M_yy_i(in_dx,in_dy)=M_yy_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*((omega_y)^2*t_mki^3/3+omega_y*(y_old-Y_i_c(in_dx,in_dy))*t_mki^2+t_mki*(y_old-Y_i_c(in_dx,in_dy))^2);
 
-                    M_xy_i(in_dx,in_dy)=M_xy_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*(omega_x*omega_y*t_mki^3/3+0.5*((x_old-X_i_c(in_dx,in_dy)*omega_y)+(y_old-Y_i_c(in_dx,in_dy))*omega_x)*t_mki^2+t_mki*(x_old-X_i_c(in_dx,in_dy))*(y_old-Y_i_c(in_dx,in_dy)));
+                    M_xy_i(in_dx,in_dy)=M_xy_i(in_dx,in_dy)+1/(dx*dy)*mu(pol_count,1)*w(pol_count,1)*weight_azimuthal(az_count,1)*fin_d(az_count,1)*(omega_x*omega_y*t_mki^3/12+t_mki*(x_c_track-X_i_c(in_dx,in_dy))*(y_c_track-Y_i_c(in_dx,in_dy)));
 
                     
 

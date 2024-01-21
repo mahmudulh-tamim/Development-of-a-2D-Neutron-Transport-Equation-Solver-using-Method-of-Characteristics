@@ -54,7 +54,7 @@ X_i_c=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number);
 Y_i_c=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number);
 
 
-M=zeros(3,3,mesh_center_abscissa_number,mesh_center_ordinate_number);
+
 
 
 sum_s_len=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number);
@@ -68,6 +68,7 @@ for azim=1:N_a
     area_approx(:,:,azim)=sum_len(:,:,azim)*fin_d(azim,1);
 end
 ksi=dx*dy./area_approx;
+%ksi=ones(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number);
 
 %% bottom to top rays
 
@@ -666,3 +667,5 @@ for az_count=N_a/2+1:3*N_a/4
 
 end
 
+%X_i_c=mesh_center_x.*ones(1,mesh_center_ordinate_number);
+%Y_i_c=mesh_center_y'.*ones(mesh_center_abscissa_number,1);

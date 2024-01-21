@@ -12,8 +12,8 @@ nu_sigma_f=0.39;
 X=4;
 Y=4;
 
-dx=0.5;
-dy=0.5;
+dx=0.1;
+dy=0.1;
 
 mesh_center_x=(dx/2:dx:X)';
 mesh_center_y=(dy/2:dy:Y)';

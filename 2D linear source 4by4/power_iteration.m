@@ -2,8 +2,8 @@
 %function [k_new, flux_new]=power_iteration()
 X=4;
 Y=4;
-dx=0.5;
-dy=0.5;
+dx=0.1;
+dy=0.1;
 N_a=32;
 sigma_t=1;
 sigma_s=0.7;
