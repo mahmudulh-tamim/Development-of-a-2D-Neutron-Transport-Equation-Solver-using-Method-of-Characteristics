@@ -88,8 +88,8 @@ vertical_moderator_region4_end_y=10;
 
 %data structuring in matrix
 
-dx=0.1; % integer multiple of dx should be equal to 1,2 and 10
-dy=0.1; % integer multiple of dy should be equal to 1,9 and 10
+dx=0.2; % integer multiple of dx should be equal to 1,2 and 10
+dy=0.2; % integer multiple of dy should be equal to 1,9 and 10
 
 x=(0:dx:X)';
 y=(0:dx:Y)';

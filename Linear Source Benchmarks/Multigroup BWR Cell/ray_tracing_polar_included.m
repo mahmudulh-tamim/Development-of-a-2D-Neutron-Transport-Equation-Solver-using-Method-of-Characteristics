@@ -1,8 +1,8 @@
 
-function [F_1,F_2,G_1,G_2,H,tau,ksi,x_c_t,y_c_t,X_i_c,Y_i_c,s_len,sum_s_len,adj_len,alt_azim_theta,fin_d]=ray_tracing_polar_included(X,Y,dx,dy,N_a,sigma_t)
+function [F_1,F_2,G_2,H,ksi,x_c_t,y_c_t,X_i_c,Y_i_c,s_len,sum_s_len,adj_len,alt_azim_theta,fin_d]=ray_tracing_polar_included(X,Y,dx,dy,N_a,sigma_t)
 
 
-[alt_azim_theta,length_of_rays,fin_d,sum_len,x_c_t,y_c_t]=ray_tracing(X,Y,dx,dy,N_a);
+[alt_azim_theta,length_of_rays,fin_d,sum_len,x_c_t,y_c_t,ray_count_max]=ray_tracing(X,Y,dx,dy,N_a);
 
 
 
@@ -41,15 +41,15 @@ weight_azimuthal(end,1)=0.5*(2*pi-alt_azim_theta(end-1,1)+alt_azim_theta(1,1));
 ray_index_count=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number);
 
 
-s_len=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number,500);
+s_len=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number,ray_count_max);
 
-tau=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number,500);
+tau=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number,ray_count_max);
 
-F_1=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number,500);
-F_2=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number,500);
-G_1=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number,500);
-G_2=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number,500);
-H=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number,500);
+F_1=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number,ray_count_max);
+F_2=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number,ray_count_max);
+G_1=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number,ray_count_max);
+G_2=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number,ray_count_max);
+H=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number,ray_count_max);
 X_i_c=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number);
 Y_i_c=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number);
 

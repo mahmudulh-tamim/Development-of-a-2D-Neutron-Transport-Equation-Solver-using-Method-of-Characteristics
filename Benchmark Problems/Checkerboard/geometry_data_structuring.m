@@ -94,9 +94,10 @@ for i=1:6
 end
 
 
-%{
 
+%{
 sigma_t=sigma_t';
 sigma_s=sigma_s';
 nu_sigma_f=nu_sigma_f';
+
 %}

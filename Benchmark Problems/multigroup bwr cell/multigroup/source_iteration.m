@@ -33,7 +33,7 @@ flux_new(:,:,g)=reflective(source_term,exponential_portion,s_len,sum_s_len,alt_a
 
 
 iteration_source=1;
-%{
+
 while max(max(abs(flux_new(:,:,g)-flux_old(:,:,g))))>tol
     flux_old(:,:,g)=flux_new(:,:,g);
     
@@ -45,6 +45,6 @@ while max(max(abs(flux_new(:,:,g)-flux_old(:,:,g))))>tol
     
     iteration_source=1+iteration_source;
 end
-%}
+
 flux_gth_group=flux_new(:,:,g);
 iteration_source

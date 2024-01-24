@@ -1,5 +1,5 @@
 
-function [alt_azim_theta,length_of_rays,fin_d,sum_len,x_c_t,y_c_t]=ray_tracing(X,Y,dx,dy,N_a)
+function [alt_azim_theta,length_of_rays,fin_d,sum_len,x_c_t,y_c_t, ray_count_maximum]=ray_tracing(X,Y,dx,dy,N_a)
 
 
 ray_spacing=0.1;
@@ -31,10 +31,10 @@ init_d=zeros(azimuthal_discretization_number,1);
 fin_d=zeros(azimuthal_discretization_number,1);
 init_d(:,1)=ray_spacing;
 
-length_of_rays=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,500);
+length_of_rays=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number);
 
-x_c_t=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,500);
-y_c_t=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,500);
+x_c_t=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number);
+y_c_t=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number);
 
 sum_len=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number);
 
@@ -633,3 +633,5 @@ for az_count=N_a/2+1:3*N_a/4
     end
 
 end
+size_ray_count_max=size(length_of_rays);
+ray_count_maximum=size_ray_count_max(1,4);

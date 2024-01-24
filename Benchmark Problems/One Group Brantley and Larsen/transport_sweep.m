@@ -1,4 +1,4 @@
-function [avg_psi,psi_bound]=transport_sweep(S,exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d,X,Y,dx,dy,N_a,sigma_t,psi_bound)
+function [scaler_flux,psi_bound]=transport_sweep(S,exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d,X,Y,dx,dy,N_a,sigma_t,psi_bound)
 
 tol=10^(-7);
 

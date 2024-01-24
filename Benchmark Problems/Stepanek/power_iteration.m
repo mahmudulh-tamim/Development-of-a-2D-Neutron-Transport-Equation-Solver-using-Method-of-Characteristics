@@ -1,7 +1,7 @@
 
-function [k_new, flux_new]=power_iteration()
-
-N_a=32;
+%function [k_new, flux_new]=power_iteration()
+tic
+N_a=40;
 
 [X,Y,dx,dy,sigma_t,sigma_s,nu_sigma_f]=geometry_data_structuring();
 
@@ -54,9 +54,11 @@ figure(2)
 
 [mesh_x, mesh_y]=meshgrid(mesh_centre_x,mesh_centre_y);
 
-surf(mesh_x,mesh_y,flux_new);
+surfc(mesh_x,mesh_y,flux_new);
 xlabel("X ordinate");
 ylabel("Y ordinate");
 zlabel("Flux");
+colorbar
 set(gca,'zscale','log')
 iteration
+toc

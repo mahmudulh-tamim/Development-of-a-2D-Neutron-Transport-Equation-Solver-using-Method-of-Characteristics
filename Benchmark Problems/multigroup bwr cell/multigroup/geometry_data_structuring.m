@@ -1,4 +1,4 @@
-function [X,Y,dx,dy,sigma_t,sigma_s,nu_sigma_f,chi]=geometry_data_structuring()
+%function [X,Y,dx,dy,sigma_t,sigma_s,nu_sigma_f,chi]=geometry_data_structuring()
 %group number
 g=2;
 %region fuel

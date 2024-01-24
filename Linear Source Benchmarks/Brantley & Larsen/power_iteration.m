@@ -1,8 +1,8 @@
-
+tic
 %function [k_new, flux_new]=power_iteration()
 [X,Y,dx,dy,sigma_t,sigma_s,nu_sigma_f]=geometry_data_structuring();
 
-N_a=16;
+N_a=20;
 
 [F_1,F_2,G_1,G_2,H,tau,ksi,x_c_t,y_c_t,X_i_c,Y_i_c,s_len,sum_s_len,adj_len,alt_azim_theta,fin_d, mesh_center_abscissa_number,mesh_center_ordinate_number, total_rays,M,c_i_xx, c_i_yy,c_i_xy]=ray_tracing_for_other_data(X,Y,dx,dy,N_a,sigma_t);
 
@@ -56,9 +56,10 @@ end
 mesh_centre_x=(dx/2:dx:X)';
 mesh_centre_y=(dx/2:dy:Y)';
 figure(50)
-surfc(mesh_centre_x, mesh_centre_y,  flux_new);
+surfc(mesh_centre_x, mesh_centre_y,  flux_new');
 xlabel("X ordinate");
 ylabel("Y ordinate");
 zlabel("Flux");
 colorbar
 iteration
+toc

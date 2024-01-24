@@ -1,4 +1,4 @@
-function [X,Y,dx,dy,sigma_t,sigma_s,nu_sigma_f]=geometry_data_structuring();
+%function [X,Y,dx,dy,sigma_t,sigma_s,nu_sigma_f]=geometry_data_structuring();
 %given data
 
 %first type of cell
@@ -17,8 +17,8 @@ Y=24;
 x=(0:4:24);
 y=(0:4:24);
 
-dx=0.4;
-dy=0.4;
+dx=0.1;
+dy=0.1;
 
 x_representative_of_single_cell=(0:dx:4)';
 y_representative_of_single_cell=(0:dy:4)';

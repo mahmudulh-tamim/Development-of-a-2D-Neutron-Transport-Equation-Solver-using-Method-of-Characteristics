@@ -22,7 +22,7 @@ w=2*[0.670148;0.283619;0.046233];
 polar_discretization_number=size(mu,1);
 
 %azimuthal discretization
-N_a=16;
+
 del_theta=2*pi/N_a;
 theta=(0:del_theta:2*pi)';
 azimuthal_direction_theta= 0.5*(theta(1:end-1,1)+theta(2:end,1));

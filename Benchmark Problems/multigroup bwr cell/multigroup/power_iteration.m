@@ -50,8 +50,8 @@ k_new=k_old*new_q_f/old_q_f;
 
 
 iteration_power=1;
-%{
-while abs((k_new-k_old))>tol
+
+while max(max(max(abs(flux_new-flux_old))))>tol
     flux_old=flux_new;
     k_old=k_new;
     old_q_f=new_q_f;
@@ -66,24 +66,25 @@ while abs((k_new-k_old))>tol
 
     iteration_power=iteration_power+1;
 end
-%}
+
 figure(1)
 %[mesh_x, mesh_y]=meshgrid(mesh_center_abscissa_number,mesh_center_ordinate_number);
 mesh_x=mesh_center_x;
 mesh_y=mesh_center_y;
-mesh(mesh_y,mesh_x,flux_new(:,:,1));
+surfc(mesh_y,mesh_x,flux_new(:,:,1));
 
 xlabel("X ordinate");
 ylabel("Y ordinate");
 zlabel("Flux");
 title("Fast Flux");
-
+colorbar
 figure(2)
 %[mesh_x, mesh_y]=meshgrid(mesh_center_abscissa_number,mesh_center_ordinate_number);
-mesh(mesh_y,mesh_x,flux_new(:,:,2));
+surfc(mesh_y,mesh_x,flux_new(:,:,2));
 
 xlabel("X ordinate");
 ylabel("Y ordinate");  
 zlabel("Flux");
 title("Thermal Flux");
+colorbar
 iteration_power

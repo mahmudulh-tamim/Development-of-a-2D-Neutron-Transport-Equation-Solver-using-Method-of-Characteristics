@@ -1,4 +1,4 @@
-function [flux_new, x_moment_flux, y_moment_flux,psi_bound]=source_iteration(flux_old,x_moment_flux,y_moment_flux,k_old,F_1,F_2,G_1,G_2,H,tau,ksi,x_c_t,y_c_t,X_i_c,Y_i_c,s_len,sum_s_len,adj_len,alt_azim_theta,fin_d, mesh_center_abscissa_number,mesh_center_ordinate_number, total_rays,M,c_i_xx, c_i_yy,c_i_xy,N_a,X,Y,dx,dy,sigma_t,sigma_s,nu_sigma_f,psi_bound)
+function [flux_new, x_moment_flux, y_moment_flux,psi_bound]=source_iteration(flux_old,x_moment_flux,y_moment_flux,k_old,F_1,F_2,H,ksi,x_c_t,y_c_t,X_i_c,Y_i_c,s_len,adj_len,alt_azim_theta,fin_d, mesh_center_abscissa_number,mesh_center_ordinate_number, total_rays,M,c_i_xx, c_i_yy,c_i_xy,N_a,X,Y,dx,dy,sigma_t,sigma_s,nu_sigma_f,psi_bound)
 %given data
 tol=10^(-10);
 

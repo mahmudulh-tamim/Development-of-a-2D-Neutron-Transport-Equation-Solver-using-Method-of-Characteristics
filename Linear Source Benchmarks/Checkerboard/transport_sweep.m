@@ -2,7 +2,8 @@ function [scaler_flux,x_moment_scaler_flux,y_moment_scaler_flux,psi_bound]=trans
 
 tol=10^(-7);
 
-
+size_s_len=size(s_len);
+max_seg_count=size_s_len(1,5);
 
 
 mesh_center_x=(dx/2:dx:X)';
@@ -40,9 +41,9 @@ weight_azimuthal(end,1)=0.5*(2*pi-alt_azim_theta(end-1,1)+alt_azim_theta(1,1));
 ray_index_count=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number);
 total_rays=zeros(azimuthal_discretization_number,polar_discretization_number);
 
-psi_in=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number,800);
-psi_out=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number,800);
-del_psi=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number,800);
+psi_in=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number,max_seg_count);
+psi_out=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number,max_seg_count);
+del_psi=zeros(mesh_center_abscissa_number,mesh_center_ordinate_number,azimuthal_discretization_number,polar_discretization_number,max_seg_count);
 
 
 scaler_flux=q_bar_i./sigma_t;

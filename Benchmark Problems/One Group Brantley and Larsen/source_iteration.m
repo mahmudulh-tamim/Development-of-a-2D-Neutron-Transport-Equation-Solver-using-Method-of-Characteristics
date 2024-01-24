@@ -1,4 +1,4 @@
-function flux_new=source_iteration(flux_old, k_old,exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d,X,Y,dx,dy,N_a,sigma_t,sigma_s,nu_sigma_f,total_rays)
+function [flux_new,psi_bound]=source_iteration(flux_old, k_old,exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d,X,Y,dx,dy,N_a,sigma_t,sigma_s,nu_sigma_f,psi_bound)
 
 %given data
 tol=10^(-7);
@@ -15,22 +15,22 @@ scattering_term=sigma_s.*flux_old;
 
 source_term=(fission_term+scattering_term)/(4*pi);
 
-flux_new=reflective(source_term,exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d,X,Y,dx,dy,N_a,sigma_t,total_rays);
+[flux_new,psi_bound]=transport_sweep(source_term,exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d,X,Y,dx,dy,N_a,sigma_t,psi_bound);
 
 
 
-iteration=1;
+itrn=1;
 %{
 while max(max(abs(flux_new-flux_old)))>tol
     flux_old=flux_new;
-    scattering_term=sigma_s*flux_old;
+    scattering_term=sigma_s.*flux_old;
 
     source_term=(fission_term+scattering_term)/(4*pi);
 
-    flux_new=transport_sweep(source_term,exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d,X,Y,dx,dy,N_a,sigma_t);
+   [flux_new,psi_bound]=transport_sweep(source_term,exponential_portion,s_len,sum_s_len,alt_azim_theta,fin_d,X,Y,dx,dy,N_a,sigma_t,psi_bound);
 
 
-    iteration=1+iteration;
+    itrn=1+itrn;
 end
-iteration
+itrn
 %}
